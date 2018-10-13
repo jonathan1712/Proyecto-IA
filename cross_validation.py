@@ -47,12 +47,15 @@ class Cross_Validation:
         for fold in range(self.k):
             self.particionar(fold, self.k, n)
             if (self.tipo_modelo == "red_neuronal"):
-                self.red()
+                scores = self.red()
+                fold_errT = fold_errT + scores[1]*100
+                print("\nAccuracy: %.2f%%" % (scores[1]*100))
             else:
                 print('********* k = ' + str(fold) + "********* ")
                 print("Entrenamiento: " + str(self.entrenamiento))
                 print("Prueba: " + str(self.prueba))
                 print()
+        print("***Promedio acierto: " + str(fold_errT / self.k))
                 
     def particionar(self, fold, k, n):
         self.entrenamiento = []
@@ -69,7 +72,7 @@ class Cross_Validation:
         self.crear_set_datos_entrenamiento()
         self.crear_set_datos_prueba()
         self.separar_set_datos()
-        red_neuronal = Red_Neuronal(2,2,"softmax")
+        red_neuronal = Red_Neuronal(8,2,"softmax")
         red_neuronal.entrenamiento_x = self.entrenamiento_x
         red_neuronal.entrenamiento_y = self.entrenamiento_y
         red_neuronal.prueba_x = self.prueba_x
@@ -79,6 +82,6 @@ class Cross_Validation:
         
         red_neuronal.crear_modelo()
         red_neuronal.entrenar_modelo()
-        red_neuronal.probar_modelo()
+        return red_neuronal.probar_modelo()
         
     

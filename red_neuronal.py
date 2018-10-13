@@ -21,11 +21,12 @@ class Red_Neuronal:
         self.modelo.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
         #Entrenar el modelo
-        self.modelo.fit(self.entrenamiento_x, self.codificado_entrenamiento_y)
+        self.modelo.fit(self.entrenamiento_x, self.codificado_entrenamiento_y, epochs=50, batch_size=100)
 
     def probar_modelo(self):
         scores = self.modelo.evaluate(self.prueba_x, self.codificado_prueba_y)
-        print("\nAccuracy: %.2f%%" % (scores[1]*100))
+        return scores
+        
 
 
 
