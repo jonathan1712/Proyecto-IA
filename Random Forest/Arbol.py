@@ -2,81 +2,76 @@ from math import *
 from Nodo import *
 import numpy as np
 import random
+
 class Arbol:
     def __init__(self):
-        self.x = 0
         self.raiz = Nodo()
-        self.etiquetas = []
 
     def crearArbol(self, filas):
-        self.etiquetas = filas[0]                       # guardo las etiquetas
-        filas = np.delete(filas, 0, 0)                  # elimino las filas de las etiquetas
-        self.raiz = self.crearSubArbol(self.raiz, filas, self.getEntropiaRaiz(filas), self.generarColumnas(np.size(filas,1)-1))
+        numero_columnas = len(filas.columns) - 1
+        self.raiz = self.crearSubArbol(self.raiz, filas, self.getEntropiaRaiz(filas))
 
-    def crearSubArbol(self, nodo, filas, entropia, columnas):
+    def crearSubArbol(self, nodo, filas, entropia):
+        ### cantidad de columnas en valor random ###
+        #cantidad_filas = random
 
-        mejorGanancia = self.mejorAtributo(filas,entropia, columnas)
-
-        valores = self.valores_columna(filas, mejorGanancia)
-        particiones = self.getParticiones(valores, filas, mejorGanancia)
-
-        columnas.remove(mejorGanancia)
-        nodo.etiqueta = self.etiquetas[mejorGanancia]
-        """
-        print("Entropia: ", entropia)
-        print("Mejor atributo: ", mejorGanancia)
-        print("Columnas: ", columnas)
-        print("Filas: ", filas)
-        print("Particiones", particiones)
-        print("Len particiones: ", len(particiones))"""
-        #--------------------------------------------    
-        for particion in particiones:
-            sub_entropia = self.getEntropiaRaiz(particion)
-            if((sub_entropia==0) or (len(columnas) ==0)):
-                nodo.agregarHoja(self.getValorReal(particion, mejorGanancia))
-            else:
-                subNodo = Nodo()
-                subNodo = self.crearSubArbol(subNodo, particion, sub_entropia, columnas)
-                nodo.agregarNodo(subNodo)
-        #--------------------------------------------
+        ### Tomar en cuenta el valor random ###
+        numeros_columnas = [col for col in range (len(filas.columns)-1)]
         
+        ### Generar
+        nombre_columnas = self.getNombreColumnas(filas, numeros_columnas)
+
+        ### Devuelve el nombre del atributo de mejor ganancia, en caso de empate el primero desde la izquierda
+        mejorGanancia = self.mejorAtributo(filas,entropia, nombre_columnas)
+
+        nodo.etiqueta = mejorGanancia
+
+        ### Todos los valores diferentes del atributo seleccionado
+        valores_unicos = filas[mejorGanancia].unique()
+
+        ### nodo.agregarHoja(self.getValorReal(particion, mejorGanancia))
+        for valor in valores_unicos:
+            distribucion = filas.loc[(filas[mejorGanancia]==valor) & (filas['R'].isin([0,1]))]
+            distribucion = distribucion.drop(mejorGanancia, axis = 1)
+            sub_entropia = self.getEntropiaRaiz(distribucion)
+            if(sub_entropia==0):
+                nodo.agregarHoja([self.getPrediccion(distribucion),valor])
+            else:
+                if(len(distribucion.index)==1):
+                    print("ajustar")
+                else:
+                    subNodo = Nodo()
+                    sudNodo = self.crearSubArbol(subNodo, distribucion, sub_entropia)
+                    nodo.agregarNodo(subNodo)
         return nodo
-
-    def getValorReal(self, filas,columna):
-        ultimo = len(filas[0]) - 1
-        valorAtributo = filas[0][columna]
-        if(int(filas[0][ultimo]==1)):
-            return [True, valorAtributo]
+    def getPrediccion(self, filas):
+        valor = filas['R'].unique()
+        if(valor[0]==1):
+            return True
         else:
-            return [False, valorAtributo]
+            return False
 
-    def mejorAtributo(self, filas, entropia, columnas):
+    def getNombreColumnas(self,filas,columnas):
+        nombres = []
+        for col in columnas:
+            nombres.append(filas.columns[col])
+        return nombres    
+
+    def mejorAtributo(self, filas, entropia, columnas): 
         ganancia_maxima = 0
         atributo_seleccionado = 0
-
         for col in columnas:
-            ganancia = self.gananciaInformacion(col,filas,entropia)
+            datos_columnas = filas[[col,'R']]                                               #extraigo la columna
+            valores_unicos = datos_columnas[col].unique()                                   #luego los valores únicos de esa columna
+            ganancia = self.gananciaInformacion(valores_unicos, datos_columnas,col,entropia)
             if(ganancia > ganancia_maxima):
                 ganancia_maxima = ganancia
                 atributo_seleccionado = col
-        #print("Mejor atributo: ", atributo_seleccionado)
         return atributo_seleccionado
 
-    def generarColumnas(self, columnas):
-        lista = []
-        for i in range(columnas):
-            lista = lista + [i]
-        return lista
-
     def getEntropiaRaiz(self, filas):
-        positivos = 0
-        negativos = 0
-        for fila in filas:
-            columnas = len(fila)
-            if(int(fila[columnas-1])==1):
-                positivos += 1
-            else:
-                negativos += 1
+        positivos = self.contarPositivos(filas)
+        negativos = len(filas.index) - positivos
         return self.entropia(positivos, negativos)
 
     def entropia(self, p, n):
@@ -87,49 +82,24 @@ class Arbol:
             return -1 * (((p/total)* log2(p/total)) + ((n/total)* log2(n/total)))
 
     # Cálculo de la ganancia, fórmula del libro
-    def gananciaInformacion(self, atributo, filas, entropia):
-        totalFilas = len(filas)                                         #total de filas
-        valores = self.valores_columna(filas, atributo)                 #valores diferentes de la columna respectiva al atributo X
-        particiones = self.getParticiones(valores, filas, atributo)     #separación de las filas respecto a los valores diferentes
-        residuo = self.residuo(particiones, totalFilas)
-
-
-        # ganancia(atributo) = entropia - residuo(atributo)
+    def gananciaInformacion(self, valores_unicos, datos_columnas, col, entropia):
+        residuo = self.residuo(valores_unicos, datos_columnas,col)
         return entropia - residuo
 
     # Cuenta cuantas filas (con un mismo valor de un atributo) tienen como resultado: positivo 
-    def contarPositivos(self, particion):
-        positivos = 0
-        for fila in particion:
-            ultimaPosicion = len(fila) - 1
-            if(int(fila[ultimaPosicion])==1):
-                positivos += 1
-        return positivos
+    def contarPositivos(self, distribucion):
+        positivos = distribucion.loc[(distribucion['R']==1)]
+        return len(positivos.index)
 
     # Otiene un arreglo de filas por cada valor diferente en la columna
-    def getParticiones(self, valores, filas, atributo):
-        particiones = []
-        for valor in valores:
-            listaSub = []
-            for fila in filas:
-                if(fila[atributo]==valor):
-                    listaSub = listaSub + [fila]
-            particiones = particiones + [listaSub]  
-        return particiones 
-
-    # Obtiene todos los valores diferentes de una columna en especifico
-    def valores_columna(self, filas, columna):
-        return set([fila[columna] for fila in filas])
-
-    # Formula del residuo, es la del libro
-    def residuo(self, particiones, totalFilas):
-        # p/total * B(p,n)
+    def residuo(self, valores_unicos, datos_columnas, nombre_columna):
         residuo = 0
-        for particion in particiones:
-            positivos = self.contarPositivos(particion)
-            negativos = len(particion) - positivos
-            residuo += ((len(particion) / totalFilas) * self.entropia(positivos, negativos))
-        return residuo
+        for valor in valores_unicos:
+            distribucion = datos_columnas.loc[(datos_columnas[nombre_columna]==valor) & (datos_columnas['R'].isin([0,1]))]
+            positivos = self.contarPositivos(distribucion)
+            negativos = len(datos_columnas.index) - positivos
+            residuo +=  (len(distribucion.index) / len(datos_columnas.index)) * self.entropia(positivos, negativos)
+        return residuo 
 
     def verArbol(self):
         print(self.raiz.etiqueta)
