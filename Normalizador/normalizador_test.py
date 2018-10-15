@@ -1,13 +1,27 @@
+from Archivo import *
 from Normalizador import *
+from Arbol import *
 def main():
-    archivo = [[3,4,5,6,1],
-               [1,5,1,8,0],
-               [2,3,4,3,1],
-               [3,5,6,4,0]]
-    
-    prueba = Normalizador(archivo)
-    prueba.normalizar()
-    prueba.verDatos()
+    archivo = Archivo("data1.csv")
+    archivo.leerArchivo()
+    d = archivo.getDatos()
+    #print(archivo.getDatos())
+    lista = []
+    for i in range(32):
+        lista.append(3)
+
+
+    x = Normalizador(archivo.getDatos(),lista)
+    x.normalizar()
+    #x.verDatos()
+    x.clasificarColumnas()
+    #x.verDatos()
+    """archivo.escribirArchivoM(x.datos)
+    """
+    arbol = Arbol()
+    arbol.crear_arbol(x.datos)
+    arbol.ver_arbol()
+    #archivo.escribirArchivoM(x.datos)
 
 
 if __name__ == "__main__":

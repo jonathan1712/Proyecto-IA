@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from scipy import stats
+
 class Normalizador:
     
     def __init__(self, datos, num_rangos):

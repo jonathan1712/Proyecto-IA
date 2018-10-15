@@ -1,31 +1,10 @@
 from Arbol import *
+import pandas as pd
 def main():
-    """
-    arreglo = [[1,2,3,1],
-               [4,8,6,1],
-               [4,8,6,1],
-               [4,1,2,0]]
-    """
-
-    #r = arbol.getcolumnasEvaluar(arreglo)
-    #print (r)
-    #x = arbol.mejorAtributo(arreglo, 1)
-    #print(x)
-    pp()
+    prueba()
 
     
-def pp():
-    """arreglo = [["a","b","c","d","e","f","r"],
-               [1,2,6,7,3,2,0],
-               [4,2,6,1,3,5,1],
-               [4,2,6,7,3,5,0],
-               [4,1,2,5,2,5,1],
-               [7,1,2,7,1,2,1],
-               [4,2,3,1,3,2,1],
-               [7,1,6,6,2,5,0],
-               [4,1,2,6,2,2,1]]
-    """
-
+def prueba():
     arreglo = [["Outlook","Temp","Hum","Windy","R"],
                [0,0,0,0,0],
                [0,0,0,1,0],
@@ -41,6 +20,30 @@ def pp():
                [1,1,0,1,1],
                [1,0,1,0,1],
                [2,1,0,1,0]]
+    
+    outlook =   [0,0,1,2,2,2,1,0,0,2,0,1,1,2]
+    temp =      [0,0,0,1,2,2,2,1,2,1,1,1,0,1]
+    hum =       [0,0,0,0,1,1,1,0,1,1,1,0,1,0]
+    windy =     [0,1,0,0,0,1,1,0,0,0,1,1,0,1]
+    r =         [0,0,1,1,1,0,1,0,1,1,1,1,1,0]
+
+    imagen = [["Refund", "Marital", "Taxable", "R"],
+              [1,0,1,0],
+              [0,1,1,0],
+              [0,0,0,0],
+              [1,1,1,0],
+              [0,2,1,1],
+              [0,1,0,0],
+              [1,2,1,0],
+              [0,0,1,1],
+              [0,1,0,0],
+              [0,0,1,1]]
+
+    refund =    [1,0,0,1,0,0,1,0,0,0]
+    marital =   [0,1,0,1,2,1,2,0,1,0]
+    taxable =   [1,1,0,1,1,0,1,1,0,1]
+    res =       [0,0,0,0,1,0,0,1,0,1]
+
 
     examen = [["Precio","Idioma","DD","r"],
               [0,1,1,0],
@@ -63,23 +66,37 @@ def pp():
               [0,0,0,1],
               [0,1,1,0],
               [2,1,0,1]]
-    imagen = [["Refund", "Marital", "Taxable", "Cheat"],
-              [1,0,1,0],
-              [0,1,1,0],
-              [0,0,0,0],
-              [1,1,1,0],
-              [0,2,1,1],
-              [0,1,0,0],
-              [1,2,1,0],
-              [0,0,1,1],
-              [0,1,0,0],
-              [0,0,1,1]]
 
+    precio =    ["25","25","50","26-50","50","25","26-50","25","26-50","25","26-50","50","50","25","25","26-50","26-50","25","25","26-50"]
+    idioma =    ["Es","Es","Es","Es","Es","I","Es","I","I","I","I","I","I","Es","I","Es","I","I","Es","Es"]
+    dd =        ["S","N","S","N","S","N","S","N","S","N","S","N","S","N","S","N","S","N","S","N"]
+    resu =      [0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1]
 
-    
+    """
+    precio =    [0,0,1,2,1,0,2,0,2,0,2,1,1,0,0,2,2,0,0,2]
+    idioma =    [1,1,1,1,1,0,1,0,0,0,0,0,0,1,0,1,0,0,1,1]
+    dd =        [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
+    resu =      [0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1]
+    """
+
+    de = pd.DataFrame({'Precio':precio,
+                       'Idioma':idioma,
+                       'DD':dd,
+                       'diagnosis':resu})
+
+    dd = pd.DataFrame({'Refund':refund,
+                       'Marital':marital,
+                       'Taxable':taxable,
+                       'diagnosis':res})
+    df = pd.DataFrame({'Outlook':outlook,
+                       'Temp':temp,
+                       'Hum':hum,
+                       'Windy':windy,
+                       'diagnosis':r})
+
     arbol = Arbol()
-    arbol.crearArbol(arreglo)
-    arbol.verArbol()
+    arbol.crear_arbol(de)
+    arbol.ver_arbol()
     #arbol.crearSubArbol(None, arreglo)
     #print(arbol.getEntropiaRaiz(arreglo))
 
