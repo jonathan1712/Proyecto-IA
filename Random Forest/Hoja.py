@@ -3,8 +3,8 @@ class Hoja:
         self.valor = valor
         self.valor_enlance = enlace
 
-    def getValor(self):
+    def obtener_valor(self):
         return self.valor
 
-    def getEnlace(self):
+    def obtener_enlace(self):
         return self.valor_enlance

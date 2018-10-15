@@ -1,53 +1,62 @@
 from Hoja import *
 class Nodo:
     def __init__(self):
-        self.listaNodos = []
-        self.listaHojas = []
+        self.lista_nodos = []
+        self.lista_hojas = []
         self.etiqueta = ""
         self.enlace = ""
+        self.nombre = ""
 
-    def getEntropia(self):
-        print("Hola")
+    def obtener_hojas(self):
+        return self.lista_hojas
 
-    def getListaHojas(self):
-        return self.listaHojas
+    def obtener_nodos(self):
+        return self.lista_nodos
 
-    def getListaNodos(self):
-        return self.listaNodos
-
-    def getEtiqueta(self):
-        return etiqueta
+    def obtener_etiqueta(self):
+        return self.etiqueta
     
-    def getEnlace(self):
-        return enlace
+    def obtener_enlace(self):
+        return self.enlace
 
-    def getValorPeso(self):
-        return valorPeso
-    """
-    def agregarElemento(self, particiones, nombre):
-        for particion in particiones:
-            print(particion)
-            if(len(particion)==1):
-                ultimo = len(particion[0]) -1
-                if(particion[0][ultimo]==1):
-                    self.agregarHoja(True)
-                else:
-                    self.agregarHoja(False)
-            else:
-                self.agregarNodo(filas)
-    """
+    def obtener_nombre(self):
+        return self.nombre
 
-    def agregarNodo(self, nodito):
-        self.listaNodos.append(nodito)
+    def agregar_nodo(self, nodito):
+        self.lista_nodos.append(nodito)
 
-    def agregarHoja(self, datos):
+    def agregar_hoja(self, datos):
         hoja = Hoja(datos[0], datos[1])
-        self.listaHojas.append(hoja)
+        self.lista_hojas.append(hoja)
 
-    def verHojas(self):
-        for g in self.listaHojas:
-            print(g.getValor())
+    def obtener_valor_hoja(self, valor):
+        valor_hoja = ""
+        for hoja in self.lista_hojas:
+            if(hoja.obtener_enlace() == valor):
+                valor_hoja = hoja.obtener_valor()
+                break
+        return valor_hoja
 
-    def verNodos(self):
-        for f in self.listaNodos:
-            print(f)
+    def contiene_hoja(self, valor):
+        estado = False
+        for hoja in self.lista_hojas:
+            if(hoja.obtener_enlace() == valor):
+                estado = True
+                break
+        return estado
+
+    def contiene_nodo(self, valor):
+        estado = False
+        for nodo in self.lista_nodos:
+            if(nodo.obtener_enlace() == valor):
+                estado = True
+                break
+        return estado
+
+    def obtener_nodo_siguiente(self, valor):
+        nodo_siguiente = Nodo()
+        for nodo in self.lista_nodos:
+            if(nodo.obtener_enlace() == valor):
+                nodo_siguiente = nodo
+                break
+        return nodo_siguiente

@@ -22,30 +22,34 @@ class Arbol:
         # Generar
         nombre_columnas = self.get_nombre_columnas(filas, numeros_columnas)
         # Devuelve el nombre del atributo de mejor ganancia, en caso de empate el primero desde la izquierda
-        mejorGanancia = self.mejor_atributo(filas,entropia, nombre_columnas)
-        nodo.etiqueta = str(enlace) + "  ->  " +  mejorGanancia   
+        mejor_ganancia = self.mejor_atributo(filas,entropia, nombre_columnas)
+        nodo.etiqueta = str(enlace) + "  ->  " +  mejor_ganancia
+        nodo.nombre = mejor_ganancia
+        nodo.enlace = enlace   
         # Todos los valores diferentes del atributo seleccionado
-        valores_unicos = filas[mejorGanancia].unique()
+        valores_unicos = filas[mejor_ganancia].unique()
 
         # nodo.agregarHoja(self.getValorReal(particion, mejorGanancia))
         for valor in valores_unicos:
-            distribucion = filas.loc[(filas[mejorGanancia]==valor) & (filas['diagnosis'].isin([0,1]))]
-            distribucion = distribucion.drop(mejorGanancia, axis = 1)
+            distribucion = filas.loc[(filas[mejor_ganancia]==valor) & (filas['diagnosis'].isin([0,1]))]
+            distribucion = distribucion.drop(mejor_ganancia, axis = 1)
             sub_entropia = self.get_entropia_raiz(distribucion)
             
             if(sub_entropia==0):
-                nodo.agregarHoja([self.get_prediccion(distribucion),valor])
+                nodo.agregar_hoja([self.get_prediccion(distribucion),valor])
             else:
                 if(len(distribucion.columns)==2):
                     nombre = distribucion.columns[0]
-                    subNodo = Nodo()
-                    subNodo.etiqueta = str(valor) + "  ->  " +  nombre  
-                    self.columna_unica(subNodo, distribucion, nombre)
-                    nodo.agregarNodo(subNodo)
+                    sub_nodo = Nodo()
+                    sub_nodo.etiqueta = str(valor) + "  ->  " +  nombre
+                    sub_nodo.nombre = nombre
+                    sub_nodo.enlace = valor  
+                    self.columna_unica(sub_nodo, distribucion, nombre)
+                    nodo.agregar_nodo(sub_nodo)
                 else:
-                    subNodo = Nodo()
-                    sudNodo = self.crear_sub_arbol(subNodo, distribucion, sub_entropia,valor)
-                    nodo.agregarNodo(subNodo) 
+                    sub_nodo = Nodo()
+                    sud_nodo = self.crear_sub_arbol(sub_nodo, distribucion, sub_entropia,valor)
+                    nodo.agregar_nodo(sub_nodo) 
         return nodo
 
     # Tratamiento especial en caso de que solo quede una columna
@@ -62,16 +66,13 @@ class Arbol:
     # En caso de que solo quede una columna se extraer las posibles elecciones de la misma
     def definir_eleccion(self, positivos, negativos, valor, nodo):
         if(positivos>negativos):
-            nodo.agregarHoja([True, valor])
+            nodo.agregar_hoja([True, valor])
         else:
             if(negativos>positivos):
-                nodo.agregarHoja([False, valor])
+                nodo.agregar_hoja([False, valor])
             else:
-                decision = random.randint(0,1)
-                if(decision==1):
-                    nodo.agregarHoja([True, valor])
-                else:
-                    nodo.agregarHoja([False, valor])
+                decision = bool(random.getrandbits(1))
+                nodo.agregar_hoja([decision, valor])
 
     # Obtiene la predicción de un conjunto de filas 
     def get_prediccion(self, filas):
@@ -90,19 +91,15 @@ class Arbol:
 
     # Obtiene cuál es el mejor atributo de un lista de posibles mejores atributos
     def mejor_atributo(self, filas, entropia, columnas): 
-        #print(filas)
         ganancia_maxima = -1 
         atributo_seleccionado = ""
         for col in columnas:
             datos_columnas = filas[[col,'diagnosis']]                       
             valores_unicos = datos_columnas[col].unique()           
             ganancia = self.ganancia_informacion(valores_unicos, datos_columnas,col,entropia)
-            #print("Ganancia: ",ganancia)
             if(ganancia > ganancia_maxima):
-
                 ganancia_maxima = ganancia
                 atributo_seleccionado = col
-
         return atributo_seleccionado
 
     # Obtiene la entropía de un conjunto de filas
@@ -145,10 +142,32 @@ class Arbol:
         self.ver_arbol_aux(1, self.raiz)
 
     # Función auxiliar de impresión del árbol
-    def ver_arbol_aux(self, nivel, nodoRaiz):
-        for hoja in nodoRaiz.listaHojas:
-            print(" "*nivel,hoja.getEnlace(),  " -> ", hoja.getValor())
+    def ver_arbol_aux(self, nivel, nodo_raiz):
+        for hoja in nodo_raiz.obtener_hojas():
+            print(" "*nivel,hoja.obtener_enlace(),  " -> ", hoja.obtener_valor())
 
-        for nodo in nodoRaiz.listaNodos:
+        for nodo in nodo_raiz.obtener_nodos():
             print(" "*nivel,nodo.etiqueta)
             self.ver_arbol_aux(nivel+3, nodo)
+
+    # Dada una fila, obtiene el valor de un atributo
+    def obtener_valor_fila(self, fila, atributo):
+        indice = fila.loc[[0]]
+        return indice[atributo][0]
+    
+    # Función donde se evalua una fila en el árbol, es completamente de paso
+    def evaluar_fila(self, fila):
+        return self.evaluar_fila_aux(self.raiz, fila)
+
+    # Función donde se evalua a profundidad una fila en el árbol, retorna True o False
+    def evaluar_fila_aux(self, nodo, fila):
+        nombre_atributo = nodo.obtener_nombre()
+        valor = self.obtener_valor_fila(fila, nombre_atributo)
+        if(nodo.contiene_hoja(valor)):
+            return nodo.obtener_valor_hoja(valor)
+        else:
+            if(nodo.contiene_nodo(valor)):
+                nodo_siguiente = nodo.obtener_nodo_siguiente(valor)
+                return self.evaluar_fila_aux(nodo_siguiente, fila)
+            else:
+                return bool(random.getrandbits(1))
