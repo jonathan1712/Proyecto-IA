@@ -1,4 +1,4 @@
-from math import *
+import math
 from Nodo import *
 import numpy as np
 import random
@@ -9,17 +9,20 @@ class Arbol:
 
     # Función donde se crea al árbol,es una función de paso
     def crear_arbol(self, filas):
+        
         numero_columnas = len(filas.columns) - 1
         self.raiz = self.crear_sub_arbol(self.raiz, filas, self.get_entropia_raiz(filas),"R")
 
     # Función donde se crean las ramas del árbol, y por consecuente las hojas
     def crear_sub_arbol(self, nodo, filas, entropia,enlace):
-
         # cantidad de columnas en valor random ###
-        #cantidad_filas = random
-        # Tomar en cuenta el valor random ###
-        numeros_columnas = [col for col in range (len(filas.columns)-1)]
-        # Generar
+        cantidad_columnas = len(filas.columns) - 1
+        # cantidad de columnas random sobre las que se elige el mejor atributo
+        #cantidad_columnas_random = random.randint(1,cantidad_columnas)
+        cantidad_columnas_random = math.floor(math.sqrt(cantidad_columnas))
+        # numeros de columnas seleccionadas en el valor random
+        numeros_columnas = self.generar_columnas(cantidad_columnas_random, cantidad_columnas)
+        # nombre de la columnas seleccionadas de donde se elige el mejor atributo
         nombre_columnas = self.get_nombre_columnas(filas, numeros_columnas)
         # Devuelve el nombre del atributo de mejor ganancia, en caso de empate el primero desde la izquierda
         mejor_ganancia = self.mejor_atributo(filas,entropia, nombre_columnas)
@@ -28,13 +31,10 @@ class Arbol:
         nodo.enlace = enlace   
         # Todos los valores diferentes del atributo seleccionado
         valores_unicos = filas[mejor_ganancia].unique()
-
-        # nodo.agregarHoja(self.getValorReal(particion, mejorGanancia))
         for valor in valores_unicos:
             distribucion = filas.loc[(filas[mejor_ganancia]==valor) & (filas['diagnosis'].isin([0,1]))]
             distribucion = distribucion.drop(mejor_ganancia, axis = 1)
-            sub_entropia = self.get_entropia_raiz(distribucion)
-            
+            sub_entropia = self.get_entropia_raiz(distribucion)    
             if(sub_entropia==0):
                 nodo.agregar_hoja([self.get_prediccion(distribucion),valor])
             else:
@@ -49,8 +49,17 @@ class Arbol:
                 else:
                     sub_nodo = Nodo()
                     sud_nodo = self.crear_sub_arbol(sub_nodo, distribucion, sub_entropia,valor)
-                    nodo.agregar_nodo(sub_nodo) 
+                    nodo.agregar_nodo(sub_nodo)
         return nodo
+
+    def generar_columnas(self, cantidad, atributos):
+        lista_columnas = []
+        while cantidad > 0:
+            col = random.randint(0,atributos - 1)
+            if(col not in lista_columnas):
+                lista_columnas.append(col)
+                cantidad += - 1
+        return lista_columnas
 
     # Tratamiento especial en caso de que solo quede una columna
     def columna_unica(self, nodo, distribucion, nombre ):
@@ -114,7 +123,7 @@ class Arbol:
         if(p == 0 or n == 0):
             return 0
         else:
-            return -1 * (((p/total)* log2(p/total)) + ((n/total)* log2(n/total)))
+            return -1 * (((p/total)* math.log2(p/total)) + ((n/total)* math.log2(n/total)))
 
     # Cálculo de la ganancia, fórmula del libro
     def ganancia_informacion(self, valores_unicos, datos_columnas, col, entropia):
