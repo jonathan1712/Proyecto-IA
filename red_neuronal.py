@@ -13,11 +13,18 @@ class Red_Neuronal:
 
     def crear_modelo(self):
         self.modelo = Sequential()
+        self.capas = self.numero_capas-2
         self.modelo.add(Dense(units = self.unidades_capa,
-                              input_shape=(30,), activation=self.funcion_activacion))
-        for i in range(self.numero_capas-1):
+                              input_shape=(30,), 
+                              activation=self.funcion_activacion))
+        
+        while(self.capas>0):
             self.modelo.add(Dense(units = self.unidades_capa,
                                   activation=self.funcion_activacion))
+            self.capas--
+
+        self.modelo.add(Dense(units = 2,
+                            activation=self.funcion_activacion))
 
     def entrenar_modelo(self):
         # Compilar el modelo
