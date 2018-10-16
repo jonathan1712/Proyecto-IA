@@ -21,7 +21,7 @@ class Red_Neuronal:
         while(self.capas>0):
             self.modelo.add(Dense(units = self.unidades_capa,
                                   activation=self.funcion_activacion))
-            self.capas--
+            self.capas = self.capas - 1
 
         self.modelo.add(Dense(units = 2,
                             activation=self.funcion_activacion))
