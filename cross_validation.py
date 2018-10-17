@@ -41,7 +41,6 @@ class Cross_Validation:
         extremo_izquierdo = extremo_derecho - n + 1
         for i in range(len(self.datos_normalizados)):
             if not (i >= extremo_izquierdo and i <= extremo_derecho):
-                self.datos_entrenamiento.append(
-                    list(self.datos_normalizados[i]))
+                self.datos_entrenamiento.append(np.array(self.datos_normalizados.loc[i]))
             else:
-                self.datos_prueba.append(list(self.datos_normalizados[i]))
+                self.datos_prueba.append(np.array(self.datos_normalizados.loc[i]))

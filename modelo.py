@@ -1,6 +1,6 @@
 import pandas as pd
 from Archivo.archivo import *
-from Normalizador.Normalizador import *
+from Normalizador.normalizador import *
 from red_neuronal import *
 
 
