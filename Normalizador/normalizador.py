@@ -5,7 +5,7 @@ from scipy import stats
 class Normalizador:
     
 
-    def __init__(self, datos, num_rangos):
+    def __init__(self, datos=None, num_rangos=None):
         self.datos = datos
         self.num_rangos = np.array(num_rangos)
     
@@ -33,6 +33,7 @@ class Normalizador:
             minimo = round(columna.min(), 2)
             maximo = round(columna.max(), 2)
             media = columna.mean()
+            print(len(self.datos[i]))
             etiquetas_rangos = self.generar_rangos(media, minimo, maximo, self.num_rangos[i])
             columna = self.clasificar_columna(columna, etiquetas_rangos)
             self.datos[nombre_columna] = columna

@@ -1,28 +1,88 @@
-from Archivo import *
-from Normalizador import *
-from Arbol import *
-def main():
-    archivo = Archivo("data1.csv")
-    archivo.leerArchivo()
-    d = archivo.getDatos()
-    #print(archivo.getDatos())
-    lista = []
-    for i in range(32):
-        lista.append(3)
+from normalizador import *
 
 
-    x = Normalizador(archivo.getDatos(),lista)
-    x.normalizar()
-    #x.verDatos()
-    x.clasificarColumnas()
-    #x.verDatos()
-    """archivo.escribirArchivoM(x.datos)
-    """
-    arbol = Arbol()
-    arbol.crear_arbol(x.datos)
-    arbol.ver_arbol()
-    #archivo.escribirArchivoM(x.datos)
+def test_zscore():
+    normalizador = Normalizador()
+    zscore_a = np.array([-1.41421356, -0.70710678, 0, 0.70710678, 1.41421356])
+
+    # media = 2.5, desviación = 0.5
+    assert all(normalizador.zcore([2, 3]) == np.array([-1, 1]))
+
+    # media = 3, desviación = 1,41421356
+    assert(str(normalizador.zcore([1, 2, 3, 4, 5])) == str(zscore_a))
+
+def test_generar_rangos():
+    normalizador = Normalizador()
+    rango_a = ['< 2.33', '2.33 - 3.66', '3.66 <']
+    rango_b = ['< 7.0', '7.0 <']
+    rango_c = ['< 9.33', '9.33 - 14.66', '14.66 <']
+
+    # casos individuales, donde se muestra que efectivamente genera los rangos
+    assert(normalizador.generar_rangos(3, 1, 5, 3) == rango_a)
+    assert(normalizador.generar_rangos(7, 2, 15, 2) == rango_b)
+
+    # caso donde se muestra que si se ingresan valores erroneos no se produce la salida esperada
+    assert(normalizador.generar_rangos(5, 4, 10, 3) !=  rango_c)
+    assert(normalizador.generar_rangos(5, 4, 20, 3) == rango_c)
+
+def test_evaluar_acote():
+    normalizador = Normalizador()
+
+    # casos donde un valor si se encuentra entre un rango lim_a <= x < lim_b
+    assert(normalizador.evaluar_acote("10.5 - 11", 10.6) == True)
+    assert(normalizador.evaluar_acote("0 - 5", 4) == True)
+
+    # casos donde no se encuentra un valor entre un rango lim_a <= x < lim_b
+    assert(normalizador.evaluar_acote("1 - 8", 9) == False)
+    assert(normalizador.evaluar_acote("4.6 - 20.9", 30) == False)
+
+def test_evaluar_limite():
+    normalizador = Normalizador()
+
+    # casos donde un valor si está fuera del límite
+    assert(normalizador.evaluar_limite(0, "< 4", 3) == True)
+    assert(normalizador.evaluar_limite(0, "< 100", 25.8) == True)
+
+    # casos donde un valor está dentro del límite
+    assert(normalizador.evaluar_limite(1, "4 <", 3) == False)
+    assert(normalizador.evaluar_limite(1, "100 <", 25.8) == False)
+    
+def test_clasificar_columna():
+    prediccion_a = ['1 - 10', '10 - 12', '12 <', '< 1', '1 - 10', '10 - 12']
+    prediccion_b = ['< 0', '< 0', '0 <', '< 0', '0 <']
+    error_p_a = ['12 <', '10 - 12', '12 <', '< 1', '1 - 10', '10 - 12']
+    error_p_b = ["< 0", "< 0", "< 0", "< 0", "< 0"]
+    normalizador = Normalizador()
+    etiquetas_a = ["10 - 12", "< 1", "1 - 10", "12 <"]
+    etiquetas_b = ["< 0", "0 <"]
+    columna_a = [1, 10.5, 16, 0, 5, 11]
+    columna_b = [-1, -5, 2, -3, 6]
+
+    # casos donde se clasifican de manera correcta los datos
+    assert(normalizador.clasificar_columna(columna_a, etiquetas_a) == prediccion_a)
+    assert(normalizador.clasificar_columna(columna_b, etiquetas_b) == prediccion_b)
+
+    # caso donde se el valor esperado es incorrecto
+    assert(normalizador.clasificar_columna(columna_a, etiquetas_a) != error_p_a)
+    assert(normalizador.clasificar_columna(columna_b, etiquetas_b) != error_p_b)
+
+def test_clasificar_columnas():
+    area = [0.4, 4, 1.6, -2.3, 2.3, 2.1, 1, 0.7, 0.2, 2.1, 0.5, 1.4, 1.4, -2.1]
+    radius = [0.1, 0.4, 0.5, 1, 2.9, 2.2, 2.4, 1.5, 2.5, 1.5, 1, 1, 0.1, 1.1]
+    texture = [0.4, 0.1, 0.9, 0.8, 1.3, 1.3, 1.8, 0.1, 1.5, 1.1, 1, 0.2, 1, 0.1]
+    perimeter = [0.1, 1, 0.2, 0.2, 0.6, 1.2, 1.8, 0.1, 0.9, 0.1, 1, 1, 0.8, 1]
+    diagnosis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
+    data_set = pd.DataFrame({'area_mean':area,
+                       'radius_mean':radius,
+                       'texture_mean':texture,
+                       'perimeter_mean':perimeter,
+                       'diagnosis':diagnosis})
+    normalizador = Normalizador(data_set,[2, 2, 2, 2, 2])
+    normalizador.normalizar()
+    #normalizador.clasificar_columnas()
+    assert(1 == 1)
 
 
-if __name__ == "__main__":
-    main()
+
+
+
