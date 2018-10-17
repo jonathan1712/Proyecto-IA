@@ -1,31 +1,38 @@
-from modelo import *
+from red_neuronal import *
 
 
 class Cross_Validation:
-    def __init__(self, k, tipo_modelo, nombre_archivo="prueba.csv"):
+    def __init__(self, k, tipo_modelo, nombre_archivo, numero_capas,
+                    numero_unidades, funcion_activacion):
         self.k = k
         self.tipo_modelo = tipo_modelo
-        self.modelo = Modelo(tipo_modelo, nombre_archivo)
+        self.nombre_archivo = nombre_archivo
+        self.definir_modelo(numero_capas, numero_unidades, funcion_activacion)
+
+    def definir_modelo(self, numero_capas, 
+                        numero_unidades, funcion_activacion):
+        # Red Neuronal es tipo 1
+        if (self.tipo_modelo == 1):
+            self.modelo = Red_Neuronal(numero_capas, 
+                            numero_unidades, funcion_activacion)
+            
+        self.modelo.leer_archivo(self.nombre_archivo)
+        self.modelo.normalizar()
         self.datos_normalizados = self.modelo.datos_normalizados
 
     def cross_validation(self):
         fold_errT = 0
         fold_errV = 0
         n = len(self.datos_normalizados) // self.k
-        print(n)
         for fold in range(self.k):
             self.particionar(fold, self.k, n)
-            if (self.tipo_modelo != "prueba"):
-                errT = self.modelo.red_neuronal(self.datos_entrenamiento,
-                                                self.datos_prueba)
-                fold_errT = fold_errT + errT
-            else:
-                print('********* k = ' + str(fold) + "********* ")
-                print("Entrenamiento: " + str(self.datos_entrenamiento))
-                print("Prueba: " + str(self.datos_prueba))
-                print()
-                fold_errT = 100 * self.k
-        print("***Promedio acierto: " + str(fold_errT / self.k))
+            self.modelo.learner(self.datos_entrenamiento)
+            errV = self.modelo.probar_modelo(self.datos_entrenamiento)
+            errT = self.modelo.probar_modelo(self.datos_prueba)
+            fold_errT = fold_errT + errT
+            fold_errV = fold_errV + errV
+        print("***Promedio acierto Testing: " + str(fold_errT / self.k))
+        print("***Promedio acierto Validation: " + str(fold_errV / self.k))
 
     def particionar(self, fold, k, n):
         self.datos_entrenamiento = []
