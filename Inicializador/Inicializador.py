@@ -13,7 +13,7 @@ def inicializador():
     sub_grupo_arbol.add_argument("-na", "--numero-arboles", type=int,
                         help="Cantidad de arboles para el Random Forest",
                         default=51)
-    sub_grupo_arbol.add_argument("-pp", "--porcentaje-pruebas", type=float,
+    sub_grupo_arbol.add_argument("-pop", "--porcentaje-prueba", type=float,
                         help="Porcentaje de datos a utilizar para pruebas",
                         default=0.3)
     sub_grupo_arbol.add_argument("-up", "--umbral-poda", type=float,
@@ -30,6 +30,9 @@ def inicializador():
     sub_grupo_red.add_argument("-upc", "--unidades-por-capa", type=int,
                         help="Numero unidades por capa",
                         default=4)
+    sub_grupo_red.add_argument("-pp", "--porcentaje-pruebas", type=float,
+                        help="Porcentaje de datos a utilizar para pruebas",
+                        default=0.3)
     sub_grupo_red.add_argument("-fa", "--funcion-activacion", type=str,
                         help="Seleccionar la funcion de activacion",
                         default="softmax")
