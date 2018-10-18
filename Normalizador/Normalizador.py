@@ -5,11 +5,12 @@ from scipy import stats
 class Normalizador:
     
 
-    def __init__(self, datos, num_rangos=0):
+    def __init__(self, datos= None, num_rangos=None):
         self.datos = datos
         self.num_rangos = np.array(num_rangos)
     
     def normalizar(self):
+        print(type(self.datos))
         columnas = len(self.datos.columns)
         for i in range(columnas - 1):                             # -1 para no normalizar la columna de la respuesta
             nombre_columna = self.datos.columns[i]
