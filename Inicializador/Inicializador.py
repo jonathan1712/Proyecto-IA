@@ -42,21 +42,24 @@ def inicializador():
     if args.red_neuronal:
         red_neuronal(args.numero_capas, 
                      args.unidades_por_capa,
-                     args.funcion_activacion)
+                     args.funcion_activacion,
+                     args.porcentaje_pruebas)
     else:
-        random_forest(args.numero_arboles, args.umbral_poda)
+        random_forest(args.numero_arboles,
+                      args.umbral_poda,
+                      args.porcentaje_prueba)
 
 
-def random_forest(arboles, umbral_poda):
+def random_forest(arboles, umbral_poda, porcentaje_pruebas):
     if umbral_poda == -1:
-        print("llamar funcion de random forest con "+ str(arboles) + " cantidad de arboles")
+        print("llamar funcion de random forest con {} cantidad de arboles y {} porc. prueba".format(arboles, porcentaje_pruebas))
     else:
-        print("llamar funcion de random forest con {} cantidad de arboles y un umbral poda poda de {}".format(arboles, umbral_poda))
+        print("llamar funcion de random forest con {} cantidad de arboles, umbral poda de {} y {} porc. pruebas".format(arboles, umbral_poda, porcentaje_pruebas))
 
 
-def red_neuronal(capas, unidades, funcion):
-    print("llamar funcion red neuronal con {} capas, {} unidades y {} funcion".format(
-            capas, unidades, funcion))
+def red_neuronal(capas, unidades, funcion, porcentaje_pruebas):
+    print("llamar funcion red neuronal con {} capas, {} unidades, {} funcion y {} porc. pruebas".format(
+            capas, unidades, funcion, porcentaje_pruebas))
 
 
 if __name__ == "__main__":
