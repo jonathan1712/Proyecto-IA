@@ -13,6 +13,9 @@ def inicializador():
     sub_grupo_arbol.add_argument("-na", "--numero-arboles", type=int,
                         help="Cantidad de arboles para el Random Forest",
                         default=51)
+    sub_grupo_arbol.add_argument("-pp", "--porcentaje-pruebas", type=float,
+                        help="Porcentaje de datos a utilizar para pruebas",
+                        default=0.3)
     sub_grupo_arbol.add_argument("-up", "--umbral-poda", type=float,
                         help="Cantidad minima de ganancia de informacion",
                         default=-1)
