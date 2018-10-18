@@ -1,5 +1,5 @@
 import pandas as pd
-from Arbol import *
+from arbol import *
 
 
 class Random_Forest:
@@ -8,14 +8,15 @@ class Random_Forest:
         self.filas = filas
         self.numero_arboles = arboles
         self.forest = []
-        self.crear_bootstrapped()
+        #self.crear_bootstrapped()
 
     def crear_bootstrapped(self):
-        self.bootstrapped = pd.DataFrame(columns= self.filas.columns)
+        self.bootstrapped = pd.DataFrame(columns=self.filas.columns)
         numero_filas = len(self.filas.index) - 1
-        self.bootstrapped = self.filas.sample(n=numero_filas,replace=True)
+        self.bootstrapped = self.filas.sample(n=numero_filas, replace=True)
 
     def crear_forest(self):
+        self.crear_bootstrapped()
         for num in range(self.numero_arboles):
             arbol = Arbol()
             arbol.crear_arbol(self.bootstrapped)
