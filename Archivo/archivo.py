@@ -23,7 +23,9 @@ class Archivo:
     # Lee el data set de proyecto
     def leer_data_set(self):
         try:
-            self.data_set = pd.read_csv(self.nombre_archivo)
+            print("AAA 1")
+            self.data_set = pd.read_csv("data_set.csv")
+            print("AAA 2")
             columna_prediccion = self.data_set["diagnosis"]
             # Se extrae la columna de resultado
             self.data_set = self.data_set.drop("id", axis=1)
