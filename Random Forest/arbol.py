@@ -109,7 +109,7 @@ class Arbol:
 
     def get_prediccion(self, filas):
         """ get_prediccion
-        Obtiene la predicción de un grupo de filas
+        Retorna True si la predicción de un grupo de filas es 1 sino False
         """
 
         valor = filas['diagnosis'].unique()
