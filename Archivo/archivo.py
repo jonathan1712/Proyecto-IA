@@ -1,4 +1,3 @@
-import csv
 import pandas as pd
 
 
@@ -23,9 +22,7 @@ class Archivo:
     # Lee el data set de proyecto
     def leer_data_set(self):
         try:
-            print("AAA 1")
-            self.data_set = pd.read_csv("data_set.csv")
-            print("AAA 2")
+            self.data_set = pd.read_csv(self.nombre_archivo)
             columna_prediccion = self.data_set["diagnosis"]
             # Se extrae la columna de resultado
             self.data_set = self.data_set.drop("id", axis=1)

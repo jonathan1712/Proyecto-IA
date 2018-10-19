@@ -12,7 +12,7 @@ class Cross_Validation:
     """
 
     def __init__(self, tipo_modelo, porcentaje_pruebas, prefijo, argumentos):
-        self.k = 5 #dejarlo fijo
+        self.k = 3 #dejarlo fijo
         self.tipo_modelo = tipo_modelo
         self.nombre_archivo = "data_set.csv" #Dejarlo fijo también
         self.porcentaje_pruebas = porcentaje_pruebas
@@ -39,10 +39,8 @@ class Cross_Validation:
         fold_errT = 0
         fold_errV = 0
         n = len(self.datos_normalizados) // self.k
-        n_pruebas= (round(n * porcentaje_pruebas))
-        n_prediccion = n - n_pruebas
         for fold in range(self.k):
-            self.particionar(fold, self.k, n_pruebas)
+            self.particionar(fold, self.k, n)
             self.modelo.learner(self.datos_entrenamiento)
             errV = self.modelo.probar_modelo(self.datos_entrenamiento)
             errT = self.modelo.probar_modelo(self.datos_prueba)
@@ -55,13 +53,14 @@ class Cross_Validation:
         self.datos_entrenamiento = []
         self.datos_prueba = []
         self.datos_prediccion = []
+        n_pruebas= (round(n * self.porcentaje_pruebas))
         extremo_derecho = ((fold+1) * n) - 1
         extremo_izquierdo = extremo_derecho - n + 1
         for i in range(len(self.datos_normalizados)):
             if not (i >= extremo_izquierdo and i <= extremo_derecho):
                 self.datos_entrenamiento.append(np.array(self.datos_normalizados.loc[i]))
             else:
-                if (len(self.datos_prueba)==n):
+                if (len(self.datos_prueba)==n_pruebas):
                     self.datos_prediccion.append(np.array(self.datos_normalizados.loc[i]))
                 else: 
                     self.datos_prueba.append(np.array(self.datos_normalizados.loc[i]))
