@@ -1,5 +1,5 @@
 import math
-from Nodo import *
+from nodo import *
 import numpy as np
 import random
 
@@ -109,7 +109,7 @@ class Arbol:
 
     def get_prediccion(self, filas):
         """ get_prediccion
-        Obtiene la predicción de un grupo de filas
+        Retorna True si la predicción de un grupo de filas es 1 sino False
         """
 
         valor = filas['diagnosis'].unique()
@@ -206,11 +206,11 @@ class Arbol:
         self.ver_arbol_aux(1, self.raiz)
 
     def ver_arbol_aux(self, nivel, nodo_raiz):
-        for hoja in nodo_raiz.obtener_hojas():
-            print(" " * nivel, hoja.enlace(), " -> ", hoja.valor())
+        for hoja in nodo_raiz.hojas():
+            print(" " * nivel, hoja.g_enlace(), " -> ", hoja.g_valor())
 
-        for nodo in nodo_raiz.obtener_nodos():
-            print(" " * nivel, nodo.etiqueta)
+        for nodo in nodo_raiz.nodos():
+            print(" " * nivel, nodo.g_etiqueta())
             self.ver_arbol_aux(nivel + 3, nodo)
 
     def obtener_valor_fila(self, fila, atributo):
@@ -234,7 +234,7 @@ class Arbol:
         Retorna True o False
         """
 
-        nombre_atributo = nodo.obtener_nombre()
+        nombre_atributo = nodo.g_nombre()
         valor = self.obtener_valor_fila(fila, nombre_atributo)
         if(nodo.contiene_hoja(valor)):
             return nodo.obtener_valor_hoja(valor)
