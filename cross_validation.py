@@ -28,11 +28,14 @@ class Cross_Validation:
             self.modelo = Red_Neuronal(numero_capas, 
                             numero_unidades, funcion_activacion)
         else:
-            num_arboles = 5 # cambiar
+            num_arboles = argumentos[0]
+            poda = argumentos[1]
             self.modelo = Random_Forest(num_arboles, self.modelo.da)
             
         self.modelo.leer_archivo(self.nombre_archivo)
         self.modelo.normalizar()
+        if(self.tipo_modelo != 1):
+            
         self.datos_normalizados = self.modelo.datos_normalizados
         
     def cross_validation(self):
