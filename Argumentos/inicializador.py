@@ -60,7 +60,9 @@ def random_forest(arboles, umbral_poda, porcentaje_pruebas):
 def red_neuronal(capas, unidades, funcion, porcentaje_pruebas):
     print("llamar funcion red neuronal con {} capas, {} unidades, {} funcion y {} porc. pruebas".format(
             capas, unidades, funcion, porcentaje_pruebas))
+    
 
 
 if __name__ == "__main__":
     inicializador()
+
