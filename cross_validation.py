@@ -22,20 +22,20 @@ class Cross_Validation:
     def definir_modelo(self,  argumentos):
         # Red Neuronal es tipo 1
         if (self.tipo_modelo == 1):
-            numero_capas = 
-            numero_unidades = 
-            funcion_activacion = 
+            numero_capas = 10
+            numero_unidades = 4
+            funcion_activacion = "softmax"
             self.modelo = Red_Neuronal(numero_capas, 
                             numero_unidades, funcion_activacion)
         else:
-            num_arboles =
+            num_arboles = 20
             self.modelo = Random_Forest(num_arboles, self.modelo.da)
             
         self.modelo.leer_archivo(self.nombre_archivo)
         self.modelo.normalizar()
         self.datos_normalizados = self.modelo.datos_normalizados
 
-"""
+    """
     def definir_modelo(self, numero_capas, 
                         numero_unidades, funcion_activacion):
         # Red Neuronal es tipo 1
@@ -46,7 +46,7 @@ class Cross_Validation:
         self.modelo.leer_archivo(self.nombre_archivo)
         self.modelo.normalizar()
         self.datos_normalizados = self.modelo.datos_normalizados
-"""
+    """
     def cross_validation(self):
         fold_errT = 0
         fold_errV = 0
