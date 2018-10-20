@@ -14,7 +14,7 @@ class Cross_Validation:
     def __init__(self, tipo_modelo, porcentaje_pruebas, prefijo, argumentos):
         self.k = 5 #dejarlo fijo
         self.tipo_modelo = tipo_modelo
-        self.nombre_archivo = "" #Dejarlo fijo también
+        self.nombre_archivo = "" #Dejarlo fijo tambien
         self.porcentaje_pruebas = porcentaje_pruebas
         self.prefijo = prefijo
         self.definir_modelo(argumentos)

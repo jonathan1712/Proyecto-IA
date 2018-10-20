@@ -11,7 +11,7 @@ class Arbol:
 
     def crear_arbol(self, filas):
         """crear_arbol
-        Inicia el proceso recursivo de creación con la raiz
+        Inicia el proceso recursivo de creacion con la raiz
         """
 
         self.raiz = self.crear_sub_arbol(
@@ -21,7 +21,7 @@ class Arbol:
 
     def crear_sub_arbol(self, nodo, filas, entropia, enlace):
         """crear_sub_arbol
-        Construye el árbol con base en n filas seleccionadas al azar,
+        Construye el arbol con base en n filas seleccionadas al azar,
         sigue el algoritmo describo en el libro, buscando siempre
         el atributo con mejor ganancia
         """
@@ -64,7 +64,7 @@ class Arbol:
 
     def generar_columnas(self, cantidad, atributos):
         """generar_columnas
-        Genera una lista de tamano n, con números random
+        Genera una lista de tamano n, con numeros random
         entre 0 y atributos, esta lista representa las
         columnas a evaluar
         """
@@ -109,7 +109,7 @@ class Arbol:
 
     def get_prediccion(self, filas):
         """ get_prediccion
-        Retorna True si la predicción de un grupo de filas es 1 sino False
+        Retorna True si la prediccion de un grupo de filas es 1 sino False
         """
 
         valor = filas['diagnosis'].unique()
@@ -130,7 +130,7 @@ class Arbol:
 
     def mejor_atributo(self, filas, entropia, columnas):
         """mejor_atributo
-        Obtiene cuál es el mejor atributo de un lista
+        Obtiene cual es el mejor atributo de un lista
         de posibles mejores atributos
         """
 
@@ -147,7 +147,7 @@ class Arbol:
 
     def get_entropia_raiz(self, filas):
         """ get_entropia_raiz
-        Obtiene la entropía de un conjunto de filas
+        Obtiene la entropia de un conjunto de filas
         """
 
         positivos = self.contar_positivos(filas)
@@ -156,7 +156,7 @@ class Arbol:
 
     def entropia(self, p, n):
         """ entropia
-        Cálculo de la entropia según la fórmula del libro
+        Calculo de la entropia segun la formula del libro
         """
 
         total = p + n
@@ -169,7 +169,7 @@ class Arbol:
 
     def ganancia_informacion(self, v_unicos, datos_columnas, col, entropia):
         """ ganancia_informacion
-        Retorna la diferencia entre la entropía del nodo padre
+        Retorna la diferencia entre la entropia del nodo padre
         y el residuo del atributo
         """
 
@@ -187,7 +187,7 @@ class Arbol:
 
     def residuo(self, v_unicos, datos, n_columna):
         """residuo
-        Para cada atributo obtiene su residuo, que está dado por
+        Para cada atributo obtiene su residuo, que esta dado por
         la suma de la entropia * (p/total + n/total) de
         cada valor diferente.
         """
@@ -223,14 +223,14 @@ class Arbol:
 
     def evaluar_fila(self, fila):
         """ evaluar_fila
-        Inicia el proceso recursivo de evaluación de una función
+        Inicia el proceso recursivo de evaluacion de una funcion
         """
 
         return self.evaluar_fila_aux(self.raiz, fila)
 
     def evaluar_fila_aux(self, nodo, fila):
         """ evaluar_fila_aux
-        Función donde se evalua a profundidad una fila en el árbol.
+        Funcion donde se evalua a profundidad una fila en el arbol.
         Retorna True o False
         """
 

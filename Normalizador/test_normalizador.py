@@ -9,10 +9,10 @@ def test_zscore():
     normalizador = Normalizador()
     zscore_a = np.array([-1.41421356, -0.70710678, 0, 0.70710678, 1.41421356])
 
-    # media = 2.5, desviación = 0.5
+    # media = 2.5, desviacion = 0.5
     assert all(normalizador.zcore([2, 3]) == np.array([-1, 1]))
 
-    # media = 3, desviación = 1,41421356
+    # media = 3, desviacion = 1,41421356
     assert(str(normalizador.zcore([1, 2, 3, 4, 5])) == str(zscore_a))
 
 
@@ -46,11 +46,11 @@ def test_evaluar_acote():
 def test_evaluar_limite():
     normalizador = Normalizador()
 
-    # casos donde un valor si está fuera del límite
+    # casos donde un valor si esta fuera del limite
     assert(normalizador.evaluar_limite(0, "< 4", 3) is True)
     assert(normalizador.evaluar_limite(0, "< 100", 25.8) is True)
 
-    # casos donde un valor está dentro del límite
+    # casos donde un valor esta dentro del limite
     assert(normalizador.evaluar_limite(1, "4 <", 3) is False)
     assert(normalizador.evaluar_limite(1, "100 <", 25.8) is False)
 
