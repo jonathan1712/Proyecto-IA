@@ -5,10 +5,8 @@ import pandas as pd
 def test_crear_arbol():
     assert(1 == 1)
 
-
 def test_crear_sub_arbol():
     assert(1 == 1)
-
 
 def test_generar_columnas():
     arbol = Arbol()
@@ -246,7 +244,7 @@ def test_contar_positivos():
     assert(contar_positivos3 == 0)
 
 
-def residuo():
+def test_residuo():
     arbol = Arbol()
     texture = [1, 0, 0, 1, 2]
     radio = [0, 1, 0, 1, 1]
@@ -282,7 +280,6 @@ def test_obtener_valor_fila():
 
 def test_evaluar_fila():
     assert(1 == 1)
-
 
 def test_evaluar_fila_aux():
     assert(1 == 1)

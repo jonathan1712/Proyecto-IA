@@ -1,10 +1,6 @@
 from normalizador import *
 
 
-def main():
-    print("dgd")
-
-
 def test_zscore():
     normalizador = Normalizador()
     zscore_a = np.array([-1.41421356, -0.70710678, 0, 0.70710678, 1.41421356])
@@ -91,7 +87,3 @@ def test_clasificar_columnas():
     normalizador.normalizar()
     # normalizador.clasificar_columnas()
     assert(1 == 1)
-
-
-if __name__ == "__main__":
-    main()

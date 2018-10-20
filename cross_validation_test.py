@@ -7,5 +7,9 @@ def main():
                                            ["c"], ["d"], ["e"], ["f"]]
     cross_validation.cross_validation()
 
+def maine():
+    cross_validation = Cross_Validation(0,0.3, "f",[5,3])
+    cross_validation.cross_validation()
+
 if __name__ == "__main__":
-    main()
+    maine()

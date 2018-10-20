@@ -1,33 +1,37 @@
 from modelo import *
 
 
-# No sirve
 def test_leer_archivo():
     modelo = Modelo()
-    archivo = "test_modelo.csv"
-    print(modelo.leer_archivo(archivo))
+    nombre_archivo = "prueba.csv"
+
+    radius = [17, 20, 19, 11, 20, 12, 18, 13, 13]
+    textur = [10, 17, 21, 20, 14, 15, 19, 20, 21]
+    diagno = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    df = pd.DataFrame({'radius_mean': radius,
+                       'texture_mean': textur,
+                       'diagnosis': diagno})
+
+    assert all(modelo.leer_archivo(nombre_archivo) == df)
 
 def test_normalizar():
     modelo = Modelo()
-    entrada_dic = {'columna 1': [0.1189,0.08902,0.08758], 'columna 2': [0.3613,0.4601,0.3613], 'resultado': ["a","b","a"]}
-    entrada = pd.DataFrame(data=entrada_dic)
+  
+    radius = [0.1189,0.08902,0.08758]
+    textur = [0.3613,0.4601,0.3613]
+    diagno = [1,0,1]
+    df_entrada = pd.DataFrame({'radius_mean': radius,
+                       'texture_mean': textur,
+                       'diagnosis': diagno})
 
-    salida_dic = {'columna 1': [1.414214,-0.707107,-0.707107], 'columna 2': [-0.707107,1.414214,-0.707107], 'resultado': ["a","b","a"]}
-    salida = pd.DataFrame(data=salida_dic)
+    modelo.archivo = df_entrada
 
-    modelo.archivo = entrada
-    
-    print(salida)
-    print(modelo.normalizar())
-    print(salida.equals(modelo.normalizar()))
-    print(salida==modelo.normalizar())
-    #assert(salida.equals(modelo.normalizar()))
+    radius = [1.414214,-0.707107,-0.707107]
+    textur = [-0.707107,1.414214,-0.707107]
+    diagno = [1,0,1]
+    df_salida = pd.DataFrame({'radius_mean': radius,
+                       'texture_mean': textur,
+                       'diagnosis': diagno})
 
-def main():
-    test_normalizar()
-
-if __name__ == "__main__":
-    main()
-
-
-
+    df_salida = df_salida.round(5)
+    assert(df_salida.equals(modelo.normalizar(1).round(5)))
