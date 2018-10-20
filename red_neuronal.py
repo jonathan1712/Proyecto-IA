@@ -56,9 +56,10 @@ class Red_Neuronal (Modelo):
     def predecir(self, datos_prediccion_x=None,
                 datos_prediccion_y = None):
         """
-        Funcion recibe un arreglo x del cual predicira sus valores y
-        tambien recibe un arreglo de y para verificar la tasa de error de este
-        retorna un arreglo res[[tasa_error][lista_prediccines]]
+        Funcion recibe un arreglo "x" del cual predicira sus valores "y",
+        tambien recibe un arreglo de "y" para verificar la tasa de error de 
+        este.
+        Retorna un arreglo res[[tasa_error][lista_prediccines]]
         """
         pred_error = 0
         res = pred = []
@@ -78,6 +79,10 @@ class Red_Neuronal (Modelo):
         return res
 
     def normalizar_datos_prediccion(self, prediccion):
+        """
+        Recibe el arreglo de prediccion [[0.999],[0.321111]]
+        y lo normaliza a binario [[1][0]]
+        """
         pred = []
 
         for i in range(len(prediccion)):
