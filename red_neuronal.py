@@ -53,14 +53,30 @@ class Red_Neuronal (Modelo):
                                      self.codificado_datos_prueba_y)
         return scores[1] * 100
 
-    def predecir(self):
-        print("-*-*-*-*-*-")
-        prediccion = self.modelo.predict(self.datos_prueba_x, batch_size=None, verbose=1, steps=None)
-        normalizar = Normalizador(prediccion)
-        normalizar.normalizar()
-        normalizar= normalizar.datos
-        print(np_utils.to_categorical(normalizar))
-        print("-*-*-*-*-*-")
+    def predecir(self, datos_prediccion_x=None,datos_prediccion_y = None):
+        """
+        Funcion recibe un arreglo "x" del cual predicira sus valores "y",
+        tambien recibe un arreglo de "y" para verificar la tasa de error de 
+        este.
+        Retorna un arreglo res[[tasa_error][lista_prediccines]]
+        """
+        pred_error = 0
+        res = pred = []
+
+        if datos_prediccion_x == None and datos_prediccion_y == None:
+            datos_prediccion_x = self.datos_prueba_x
+            datos_prediccion_y = self.datos_prueba_y
+
+        prediccion = self.modelo.predict(datos_prediccion_x, batch_size=None, 
+                                        verbose=1, steps=None)
+        pred = self.normalizar_datos_prediccion(prediccion)
+        for i in range(len(pred)):
+            if not(pred[i] == datos_prediccion_y[i]):#prediccion ok?
+                pred_error = pred_error + 1
+        res.append(pred_error*100.0/len(pred))
+        res.append(pred)
+        return res
+
 
     def crear_set_datos_entrenamiento(self):
         self.nombres_columnas = ["radius_mean", "texture_mean",

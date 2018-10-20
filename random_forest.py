@@ -17,7 +17,7 @@ class Random_Forest (Modelo):
 
     def probar_modelo(self, filas):
         filas.reset_index(inplace=True)
-        aciertos = 0 
+        errores = 0 
         for indice in range(len(filas.index)):
             sub_fila = filas.loc[indice]
             columnas = len(filas.columns)
@@ -29,10 +29,10 @@ class Random_Forest (Modelo):
             fila.loc[0] = lista_fila
             respuesta_pre = self.evaluar_fila_forest(fila)
             respuesta_real = self.get_valor_real(fila)
-            if(respuesta_pre == respuesta_real):
-                aciertos += 1
+            if(respuesta_pre != respuesta_real):
+                errores += 1
 
-        return aciertos / len(filas.index)
+        return errores / len(filas.index)
 
     def get_valor_real(self, fila):
         valor_real = fila['diagnosis'][0]
@@ -66,6 +66,38 @@ class Random_Forest (Modelo):
             return True     # Benigno
         else:
             return False    # Maligno
+
+    def predecir(self, filas):
+        filas.reset_index(inplace=True)
+        errores = 0
+        lista_resultados = [] 
+        lista_reales = []
+        conta = 0
+        for indice in range(len(filas.index)):
+            fila = self.crear_fila(filas, indice)
+            respuesta_pre = self.evaluar_fila_forest(fila)
+            respuesta_real = self.get_valor_real(fila)
+            if(respuesta_pre != respuesta_real):
+                conta += 1
+                errores += 1
+            lista_reales.append(respuesta_real)
+            if(respuesta_pre == True):
+                lista_resultados.append('B')
+            else:
+                lista_resultados.append('M')
+        return [errores / len(filas.index), lista_resultados]
+        
+    def crear_fila(self, filas, indice):
+        sub_fila = filas.loc[indice]
+        columnas = len(filas.columns)
+        lista_fila = []
+        for i in range(columnas):
+            lista_fila.append(sub_fila[i])
+        lista_fila = lista_fila[1:]
+        fila = pd.DataFrame(columns=filas.columns[1:])
+        fila.loc[0] = lista_fila
+        return fila
+        
 
     def print_forest(self):
         for arbol in self.forest:

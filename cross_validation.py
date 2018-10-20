@@ -35,6 +35,7 @@ class Cross_Validation:
         fold_errT = 0
         fold_errV = 0
         n = len(self.datos_normalizados) // self.k
+        #archivo = Archivo(self.prefijo)
         for fold in range(self.k):
             self.particionar(fold, self.k, n)
             self.modelo.learner(self.datos_entrenamiento)
@@ -42,8 +43,21 @@ class Cross_Validation:
             errT = self.modelo.probar_modelo(self.datos_prueba)
             fold_errT = fold_errT + errT
             fold_errV = fold_errV + errV
-        print("***Promedio acierto Testing: " + str(fold_errT / self.k))
-        print("***Promedio acierto Validation: " + str(fold_errV / self.k))
+
+        resultados_predicciones = self.modelo.predecir(self.datos_prediccion)
+        print("***Promedio error Testing: " + str(fold_errT / self.k))
+        print("***Promedio error Validation: " + str(fold_errV / self.k))
+        print("***Promedio error Predicción: " + str(resultados_predicciones[0]))
+        self.escribir_archivo_prediccion(resultados_predicciones[1])
+
+    def escribir_archivo_prediccion(self, predicciones):
+        self.datos_prediccion = self.datos_prediccion.drop('index',axis=1)
+        print(self.datos_prediccion)
+        self.datos_prediccion['Prediccion'] = predicciones
+        
+        archivo = Archivo(self.prefijo + "_prediccion.csv")
+        archivo.escribir_archivo_csv(self.datos_prediccion, archivo.nombre_archivo)    
+
 
     def particionar(self, fold, k, n):
         if(self.tipo_modelo == 1):
