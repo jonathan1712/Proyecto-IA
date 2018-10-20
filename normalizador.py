@@ -11,7 +11,7 @@ class Normalizador:
 
     def normalizar(self):
         """ normalizar
-        Para cada fila del data_set se aplica la función zscore.
+        Para cada fila del data_set se aplica la funcian zscore.
         Cada valor de cada fila es redondeado a dos decimales
         antes de ser normalizado.
         """
@@ -21,7 +21,7 @@ class Normalizador:
         for i in range(columnas):
             nombre_columna = self.datos.columns[i]
             columna = self.datos[nombre_columna]
-            # redonde los datos a dos dígitos
+            # redonde los datos a dos dagitos
             columna = [round(float(ind), 2) for ind in columna]
             # normalize la columna
             columna = self.zcore(columna)
@@ -29,7 +29,7 @@ class Normalizador:
 
     def zcore(self, columna):
         """ zscore
-        Aplica la función zscore de stats a una columna (lista)
+        Aplica la funcian zscore de stats a una columna (lista)
         """
 
         columna = stats.zscore(columna)
@@ -37,7 +37,7 @@ class Normalizador:
 
     def clasificar_columnas(self):
         """ clasificar_columnas
-        Toma las columnas ya normalizadas y las clasifica según
+        Toma las columnas ya normalizadas y las clasifica segan
         la cantidad de rangos solicitados.
         No clasifica la columna de diagnosis.
         """
@@ -57,10 +57,10 @@ class Normalizador:
 
     def generar_rangos(self, media, minimo, maximo, rangos):
         """ generar_rangos
-        Dado los valores flotantes de media, mínimo, máximo de una columna,
-        genera un cantidad n de rangos, para ello se cálcula la distancia
-        del mínimo al máximo y ese es el intervalo de cada rango.
-        Hace distinción entre límite del tipo "<x, >x" y a <= x < b
+        Dado los valores flotantes de media, manimo, maximo de una columna,
+        genera un cantidad n de rangos, para ello se calcula la distancia
+        del manimo al maximo y ese es el intervalo de cada rango.
+        Hace distincian entre lamite del tipo "<x, >x" y a <= x < b
         """
 
         lista_rangos = []
@@ -68,7 +68,7 @@ class Normalizador:
             lista_rangos.append("< " + str(round(float(media), 2)))
             lista_rangos.append(str(round(float(media), 2)) + " <")
         else:
-            # Determina el tamaño de cada rango
+            # Determina el tamano de cada rango
             pivote = round((maximo-minimo)/rangos, 2)
             paso = minimo + pivote
             for indice in range(rangos - 1):
@@ -88,7 +88,7 @@ class Normalizador:
     def clasificar_columna(self, columna, etiquetas):
         """ clasificar_columna
         Clasifica todos los elementos de una columna con base en las
-        etiquetas que se generaron para la misma según el número de
+        etiquetas que se generaron para la misma segan el namero de
         rangos solicitados.
         """
 
@@ -122,7 +122,7 @@ class Normalizador:
     def evaluar_limite(self, tipo, expresion, numero):
         """ evaluar_limite
         Evalua expresiones en string del tipo numero < x, x < numero, y
-        retorna True o False dependiendo de la evaluación.
+        retorna True o False dependiendo de la evaluacian.
         """
 
         # limite inferior donde numero < eval(expresion)

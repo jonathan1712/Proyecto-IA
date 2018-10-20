@@ -1,6 +1,6 @@
 import pandas as pd
-from Archivo.archivo import *
-from Normalizador.normalizador import *
+from archivo import *
+from normalizador import *
 
 
 class Modelo:

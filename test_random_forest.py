@@ -17,9 +17,9 @@ def test_crear_bootstrapped():
     random_forest = Random_Forest(10, df)
     random_forest.crear_bootstrapped()
 
-    # Se prueba que el bootstrapped no está vacío
+    # Se prueba que el bootstrapped no esta vacao
     assert(len(random_forest.bootstrapped.index) != 0)
-    # Prueba: el bootstrapped tiene el mismo tamaño que el data frame original
+    # Prueba: el bootstrapped tiene el mismo tamano que el data frame original
     assert(len(random_forest.bootstrapped.index == len(df.index)))
 
 
@@ -34,21 +34,21 @@ def test_crear_forest():
                        'hum': hum,
                        'radio': rad,
                        'diagnosis': dia})
-    # 10 = Número de cantidad de árboles
+    # 10 = Namero de cantidad de arboles
     random_forest = Random_Forest(10, df)
     random_forest.crear_forest()
 
-    # Se prueba que el arreglo de árboles no está vacío
+    # Se prueba que el arreglo de arboles no esta vacao
     assert(len(random_forest.forest) != 0)
-    # El random.forest posee exactamente la cantidad de árboles solicitados
+    # El random.forest posee exactamente la cantidad de arboles solicitados
     assert(len(random_forest.forest) == 10)
-    # El random.forest posee exactamente la cantidad de árboles solicitados
+    # El random.forest posee exactamente la cantidad de arboles solicitados
     assert(len(random_forest.forest) != 9)
 
 
 def test_evaluar_fila_forest():
-    # La prueba es un poco compleja, asi que se supone un # de árboles = 1
-    # Para efectos prácticos True = Benigno, False = Maligno
+    # La prueba es un poco compleja, asi que se supone un # de arboles = 1
+    # Para efectos practicos True = Benigno, False = Maligno
     # Se genera el siguiente
     """
     R  ->  Windy
@@ -59,10 +59,10 @@ def test_evaluar_fila_forest():
             1  ->  False
             0  ->  True
     """
-    # Creación del Random Forest
+    # Creacian del Random Forest
     random_forest = Random_Forest(0, None)
 
-    # Creación manual del árbol
+    # Creacian manual del arbol
     arbol = Arbol()
 
     # Raiz
@@ -93,7 +93,7 @@ def test_evaluar_fila_forest():
     nodo_raiz.agregar_nodo(nodo_out)
     arbol.raiz = nodo_raiz
 
-    # Línea evaluar
+    # Lanea evaluar
     de = pd.DataFrame({'Outlook': [0],
                        'Temp': [2],
                        'Hum': [1],
