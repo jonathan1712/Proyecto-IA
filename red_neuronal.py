@@ -22,14 +22,6 @@ class Red_Neuronal (Modelo):
         self.crear_modelo()
         self.entrenar_modelo(datos_entrenamiento)
 
-    def probar(self, modelo, datos_prueba):
-        """ probar
-        Dado un conjunto de datos de prueba se procede a
-        evaluación de los mismos
-        """
-
-        self.probar_modelo(datos_prueba)
-
     def crear_modelo(self):
         """ crear_modelo
         Se configuran las características de la red, esto implica
@@ -79,7 +71,7 @@ class Red_Neuronal (Modelo):
         self.crear_set_datos_prueba()
         scores = self.modelo.evaluate(self.datos_prueba_x,
                                       self.codificado_datos_prueba_y)
-        return ((1- scores[1]) * 100)
+        return (1- scores[1])
 
     def predecir(self, datos_prediccion):
         """ predecir
@@ -88,7 +80,6 @@ class Red_Neuronal (Modelo):
         predicción
         """
 
-        print(datos_prediccion)
         pred_error = 0
         res = []
         pred = []
@@ -96,15 +87,18 @@ class Red_Neuronal (Modelo):
         self.datos_prediccion_y = datos_prediccion.iloc[:, 30].values
         prediccion = self.modelo.predict(self.datos_prediccion_x, batch_size=None,
                                          verbose=1, steps=None)
-        # print("-***********_")
-        # print(prediccion)
-        
         pred = self.normalizar_datos_prediccion(prediccion)
+        lista_a = []
+        for b in pred:
+            if(b==0):
+                lista_a.append("M")
+            else:
+                lista_a.append("B")
         for i in range(len(pred)):
-            if not(pred[i] == self.datos_prediccion_y[i]):#prediccion ok?
+            if not(pred[i] == self.datos_prediccion_y[i]):  # prediccion ok?
                 pred_error = pred_error + 1
-        res.append(pred_error*100.0/len(pred))
-        res.append(pred)
+        res.append(pred_error / len(pred))
+        res.append(lista_a)
 
         return res
 

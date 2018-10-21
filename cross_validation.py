@@ -88,8 +88,10 @@ class Cross_Validation:
         valor real con el predicho
         """
 
-        self.datos_prediccion = self.datos_prediccion.drop('index', axis=1)
+        if(self.tipo_modelo == 0):
+            self.datos_prediccion = self.datos_prediccion.drop('index', axis=1)
         self.datos_prediccion['Prediccion'] = predicciones
+        self.datos_prediccion['diagnosis'] = self.datos_prediccion['diagnosis'].map({1: 'B', 0: 'M'})
         archivo = Archivo(self.prefijo + "_prediccion.csv")
         archivo.escribir_archivo_csv(self.datos_prediccion, archivo.nombre_archivo)
 
