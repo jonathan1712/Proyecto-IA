@@ -31,20 +31,35 @@ class Cross_Validation:
         self.datos_normalizados = self.modelo.datos_normalizados
         
     def cross_validation(self):
+        
         self.sacar_prediccion()
         fold_errT = 0
         fold_errV = 0
         n = len(self.datos_normalizados) // self.k
-        #archivo = Archivo(self.prefijo)
+        archivo = Archivo(self.prefijo + "_datos_estadisticos.txt")
+        archivo.abrir_archivo()
+        archivo.escribir_linea("Modelo: " + self.modelo.__class__.__name__ + "\n")
+        archivo.escribir_linea("K-Fold Validation de: " + str(self.k) + "\n")
+
         for fold in range(self.k):
+            archivo.escribir_linea("** K-Fold: " + str(fold)  + " **" + "\n")
             self.particionar(fold, self.k, n)
             self.modelo.learner(self.datos_entrenamiento)
             errV = self.modelo.probar_modelo(self.datos_entrenamiento)
             errT = self.modelo.probar_modelo(self.datos_prueba)
             fold_errT = fold_errT + errT
             fold_errV = fold_errV + errV
+            archivo.escribir_linea("    Error de Validacion             -> " + str(errV) + "\n")
+            archivo.escribir_linea("    Error de Testing                -> " + str(errT) + "\n")
+            archivo.escribir_linea("    Fold error validacion actual    -> " + str(fold_errV) + "\n")
+            archivo.escribir_linea("    Fold error testing actual       -> " + str(fold_errT) + "\n")
 
         resultados_predicciones = self.modelo.predecir(self.datos_prediccion)
+        archivo.escribir_linea("-------------------------------------------------------------\n")
+        archivo.escribir_linea("-> Promedio error testing:    " + str(fold_errT / self.k) + "\n")
+        archivo.escribir_linea("-> Promedio error validacion: " + str(fold_errV / self.k) + "\n")
+        archivo.escribir_linea("-> Promedio error prediccion: " + str(resultados_predicciones[0]) + "\n")
+        archivo.cerrar_archivo()
         print("***Promedio error Testing: " + str(fold_errT / self.k))
         print("***Promedio error Validation: " + str(fold_errV / self.k))
         print("***Promedio error Predicción: " + str(resultados_predicciones[0]))
@@ -52,7 +67,6 @@ class Cross_Validation:
 
     def escribir_archivo_prediccion(self, predicciones):
         self.datos_prediccion = self.datos_prediccion.drop('index',axis=1)
-        print(self.datos_prediccion)
         self.datos_prediccion['Prediccion'] = predicciones
         
         archivo = Archivo(self.prefijo + "_prediccion.csv")

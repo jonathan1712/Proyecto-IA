@@ -7,19 +7,33 @@ from modelo import *
 
 
 class Red_Neuronal (Modelo):
+    
     def __init__(self, numero_capas, unidades_capa, funcion_activacion):
         self.numero_capas = numero_capas
         self.unidades_capa = unidades_capa
         self.funcion_activacion = funcion_activacion
 
     def learner(self, datos_entrenamiento):
+        """ learner
+        Función de aprendizaje, dado un conjunto de datos de
+        entrenamiento la red neuronal se entrena
+        """
+
         self.crear_modelo()
         self.entrenar_modelo(datos_entrenamiento)
         
     def probar(self, modelo, datos_prueba):
+        """ probar
+        Dado un conjunto de datos de prueba se procede a a 
+        evaluación de los mismos
+        """
+
         self.probar_modelo(datos_prueba)
 
     def crear_modelo(self):
+        """ crear_modelo
+
+        """
         self.modelo = Sequential()
         self.capas = self.numero_capas-2
         self.modelo.add(Dense(units = self.unidades_capa,
@@ -53,28 +67,27 @@ class Red_Neuronal (Modelo):
                                      self.codificado_datos_prueba_y)
         return scores[1] * 100
 
-    def predecir(self, datos_prediccion_x=None,datos_prediccion_y = None):
-        """
-        Funcion recibe un arreglo "x" del cual predicira sus valores "y",
-        tambien recibe un arreglo de "y" para verificar la tasa de error de 
-        este.
-        Retorna un arreglo res[[tasa_error][lista_prediccines]]
-        """
+    def predecir(self, datos_prediccion):
+        print(datos_prediccion)
         pred_error = 0
-        res = pred = []
-
-        if datos_prediccion_x == None and datos_prediccion_y == None:
-            datos_prediccion_x = self.datos_prueba_x
-            datos_prediccion_y = self.datos_prueba_y
-
-        prediccion = self.modelo.predict(datos_prediccion_x, batch_size=None, 
+        res = []
+        pred = []
+ 
+        self.datos_prediccion_x = datos_prediccion.iloc[:, 0:30].values
+        prediccion = self.modelo.predict(self.datos_prediccion_x, batch_size=None, 
                                         verbose=1, steps=None)
+        print("-***********_")
+        print(prediccion)
+        """
         pred = self.normalizar_datos_prediccion(prediccion)
+     
         for i in range(len(pred)):
             if not(pred[i] == datos_prediccion_y[i]):#prediccion ok?
                 pred_error = pred_error + 1
         res.append(pred_error*100.0/len(pred))
         res.append(pred)
+
+        """
         return res
 
 

@@ -37,3 +37,13 @@ class Archivo:
             return True
         except:
             return False
+
+    def abrir_archivo(self):
+        self.puntero = open(self.nombre_archivo, 'w')
+        
+    def escribir_linea(self, contenido):
+        self.puntero.writelines(contenido)
+
+    def cerrar_archivo(self):
+        self.puntero.close()
+
