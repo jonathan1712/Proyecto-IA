@@ -9,7 +9,8 @@ Proyecto I
 Estudiantes: 			      
 * Jonathan Martínez Camacho 	      
 * Mariana Rojas Semeraro 		      
-* Diego Tenorio Solís 		      
+* Diego Tenorio Solís
+Repositorio: https://github.com/jonathan1712/Proyecto-IA.git 		      
 ------------------------------------------------
 
 ------------------------------------------------
@@ -30,6 +31,15 @@ Con ayuda de la librería pandas se encarga de leer el archivo de extensión csv
 ### cerrar_archivo
 
 ## Normalización
+Esta clase es la encargada de la normalización de los datos, por lo cual, es indispensable, tanto para el modelo de redes neuronales como para el modelo de random forest. También se encarga de realizar la clasificación de las columnas, esto en el caso del random forest.
+### normalizar
+### zscore
+### clasificar_columna
+### clasificar_columnas
+### generar_rangos
+### evaluar_acote
+### evaluar_limite
+
 
 ## Cross Validation
 ### definir_modelo
@@ -79,10 +89,56 @@ Este algoritmo se encarga de particionar el set de datos en dos conjuntos en cad
 - Set de datos para la correcta predicción de los modelos, el mismo se puede obtener de forma gratuita de la siguiente dirección: https://www.kaggle.com/uciml/breast-cancer-wisconsin-data
 
 ### Ejecución:
-- Red neuronal:
-- Random Forest:
+- Red neuronal: lo primero es definir las opciones de configuración para este modelo, las cuales son:
+	* -rn o --red-neuronal: identifica el tipo de modelo que se va a crear.
+	* -nc o --numero-capas: identifica el número de capas de la red neuronal.
+	* -upc o --unidades-por-capa: identifica el número de unidades por capa. Es este caso todas las capas poseen la misma cantidad de unidades.
+	* -pp o --porcentaje-pruebas: identifica el porcentaje de filas del conjunto de datos original que deben ser destinado a la predicción.
+	* -fa o --funcion-activacion: identifica el tipo de función de activación que se desea utilizar en el modelo. Son válidas las siguientes: "softmax" y "relu".
+	* -prer --prefijo-r: identifica el prefijo con el cual se crearan los archivos intermedios (de estadísticas de cross validation).
+	Un ejemplo de una llamada válida sería:
+	python main.py -rn -nc 3 -upc 2 -pp 0.3 -fa "softmax" -prer "corrida1"
+
+- Random Forest: lo primero es definir las opciones de configuración para este modelo, las cuales son:
+	* -rf o --random-forest: identifica el tipo de modelo que se va a crear.
+	* -na o --numero-arboles: identifica el número de árboles que se crearán para el Random Forest.
+	* -pop o --porcentaje-prueba: identifica el porcentaje de filas del conjunto de datos original que deben ser destinado a la predicción.
+	* -up o --umbral-poda: identifica el valor mínimo de un atributo para que no exista poda.
+	* -prea --prefijo-a: identifica el prefijo con el cual se crearan los archivos intermedios (de estadísticas de cross validation).
+	Un ejemplo de una llamada válida sería:
+	python main.py -rf -na 11 -pop 0.3 -up 0.15 -prea "corrida1"
+
+Al final de la ejecución de cada modelo se creará un archivo con el nombre ".csv" que contiene las filas de predicción, con el valor real y el predicho.
 ------------------------------------------------
 
 ------------------------------------------------
 # Distribución de notas y trabajo realizado
 ------------------------------------------------
+En cuanto a la distribución del trabajo se divide de la siguiente manera:
+
+- Jonathan Martínez:
+	* Encargado de la normalización de los datos.
+	* Manejo de los archivos. 
+	* Diseño y elaboración del modelo de Random Forest y todas las clases asociadas (Arbol, Hoja, Nodo).
+	* Colaboración en la documentación.
+	* Desarrollo de pruebas unitarias en lo relacionado con el módulo de Normalización, y Random Forest (Arbol, Hoja, Nodo)
+
+- Mariana Rojas:
+	* Investigación e implementación del modelo de Redes Neuronales.
+	* Diseño e implementación del módulo de Cross Validation.
+	* Diseño e implementación del módulo Modelo, que es el encargado de permitir la herencia.
+	* Colaboración en la documentación. 
+	* Desarrollo de las pruebas unitarias en lo relacionado con el módulo de Modelo.
+
+- Diego Tenorio:
+	* Investigación y colaboración en el módulo de Random Forest.
+	* Investigación y colaboración en el módulo de Redes Neuronales.
+	* Diseño e implementación del módulo del paso de parámetros al programa.
+	* Colaboración en la documentación.
+
+Distribución de la nota:
+
+- Jonathan Martínez 100
+- Mariana Roja 95
+- Diego Tenorio 80
+
