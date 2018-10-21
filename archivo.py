@@ -7,20 +7,29 @@ class Archivo:
     def __init__(self, nombre):
         self.nombre_archivo = nombre
 
-    # Obtener data_set
     def get_data_set(self):
+        """ get_data_set
+        Retorna el data_set del actual archivo
+        """
         return self.data_set
 
-    # Escribir un archivo csv, con un nombre y ciertos datos
     def escribir_archivo_csv(self, datos, nombre_archivo):
+        """ escribir_archivo_csv
+        Dado un dataframe se escribe en un archivo
+        """
+
         try:
             datos.to_csv(nombre_archivo, sep=',')
             return True
         except:
             return False
 
-    # Lee el data set de proyecto
     def leer_data_set(self):
+        """ leer_data_set
+        Abre el archivo del dataset y hace el tratamiento respectivo
+        para poderlo procesar y normalizarlo
+        """
+
         try:
             self.data_set = pd.read_csv(self.nombre_archivo)
             columna_prediccion = self.data_set["diagnosis"]
@@ -37,3 +46,25 @@ class Archivo:
             return True
         except:
             return False
+
+    def abrir_archivo(self):
+        """ abrir_archivo
+        Crea un puntero a un archivo, en el cual se va a escribir
+        estádisticas
+        """
+
+        self.puntero = open(self.nombre_archivo, 'w')
+
+    def escribir_linea(self, contenido):
+        """ escribir_linea
+        Escribe una línea en un archivo dado un puntero
+        """
+
+        self.puntero.writelines(contenido)
+
+    def cerrar_archivo(self):
+        """ cerrar_archivo
+        Cierra un archivo dado un puntero
+        """
+
+        self.puntero.close()

@@ -217,7 +217,6 @@ class Arbol:
         """ obtener_valor_fila
         Dada una fila, obtiene el valor de un atributo
         """
-
         indice = fila.loc[[0]]
         return indice[atributo][0]
 

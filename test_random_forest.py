@@ -102,6 +102,6 @@ def test_evaluar_fila_forest():
     resultado = random_forest.evaluar_fila_forest(de)
 
     # Se verifica el resultado esperado
-    assert(resultado == 'Benigno')
+    assert(resultado == True)
     # Se verifica que efectivamente el resultado es correcto
-    assert(resultado != 'Maligno')
+    assert(resultado != False)

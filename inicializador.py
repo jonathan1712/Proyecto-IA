@@ -1,7 +1,8 @@
 import argparse
 
 
-def inicializador():
+
+def obtener_parametros():
     parser = argparse.ArgumentParser(description='Inicializador del ' + 
                                     ' cross validation.')
     grupo_raiz = parser.add_mutually_exclusive_group()
@@ -19,6 +20,9 @@ def inicializador():
     sub_grupo_arbol.add_argument("-up", "--umbral-poda", type=float,
                         help="Cantidad minima de ganancia de informacion",
                         default=-1)
+    sub_grupo_arbol.add_argument("-prea", "--prefijo-a", type=str,
+                        help="Prefijo de archivos intermedios",
+                        default="archivo_inter_a.txt")
 
     grupo_red = grupo_raiz.add_mutually_exclusive_group()
     grupo_red.add_argument("-rn", "--red-neuronal", action="store_true",
@@ -36,31 +40,28 @@ def inicializador():
     sub_grupo_red.add_argument("-fa", "--funcion-activacion", type=str,
                         help="Seleccionar la funcion de activacion",
                         default="softmax")
+    sub_grupo_red.add_argument("-prer", "--prefijo-r", type=str,
+                        help="Prefijo de archivos intermedios",
+                        default="archivo_inter_r.txt")
     
     args = parser.parse_args()
 
     if args.red_neuronal:
-        red_neuronal(args.numero_capas, 
+        return red_neuronal(args.numero_capas, 
                      args.unidades_por_capa,
                      args.funcion_activacion,
-                     args.porcentaje_pruebas)
+                     args.porcentaje_pruebas,
+                     args.prefijo_r)
     else:
-        random_forest(args.numero_arboles,
+        return random_forest(args.numero_arboles,
                       args.umbral_poda,
-                      args.porcentaje_prueba)
+                      args.porcentaje_prueba,
+                      args.prefijo_a)
 
 
-def random_forest(arboles, umbral_poda, porcentaje_pruebas):
-    if umbral_poda == -1:
-        print("llamar funcion de random forest con {} cantidad de arboles y {} porc. prueba".format(arboles, porcentaje_pruebas))
-    else:
-        print("llamar funcion de random forest con {} cantidad de arboles, umbral poda de {} y {} porc. pruebas".format(arboles, umbral_poda, porcentaje_pruebas))
+def random_forest(arboles, umbral_poda, porcentaje_pruebas, prefijo):
+    return [0, porcentaje_pruebas, prefijo, [arboles, umbral_poda]]
 
 
-def red_neuronal(capas, unidades, funcion, porcentaje_pruebas):
-    print("llamar funcion red neuronal con {} capas, {} unidades, {} funcion y {} porc. pruebas".format(
-            capas, unidades, funcion, porcentaje_pruebas))
-
-
-if __name__ == "__main__":
-    inicializador()
+def red_neuronal(capas, unidades, funcion, porcentaje_pruebas, prefijo):
+    return [1, porcentaje_pruebas, prefijo, [capas, unidades, funcion]]
