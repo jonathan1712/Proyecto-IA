@@ -86,12 +86,111 @@ Se toma los datos de entrenamiento del modelo para generar un dataframe de panda
 ### crear_set_datos_prueba(self)
 Se toman los datos de prueba del modelo para generar un dataframe de pandas, el cual permite manipular los datos con mayor facilidad. Además de separarlos en dos sets de datos; lo que sería equivalente a las entradas y salidas.
 
-
 ## Random Forest
+###learner(self, filas)
+*Se configura y se crea el modelo de random forest
+###probar_modelo(self, filas)
+*Dado un conjunto de filas se prueba el modelo  obteniendo como respuesta la tasa de error de dichas pruebas
+###get_valor_real(self, filas)
+*Obtiene el valor real de una fila, el "y" Retorna True si es 1 (Benigno), y sino False
+###crear_bootstrapped(self)
+*Crea el bootstrapped del random forest, seleccionando filas al azar del conjunto de entrada
+###crear_forest(self)
+*Se crea el bootstrapped del random forest y se crean todos los árboles solicitados
+###evaluar_fila_forest(self, fila)
+*Toma una fila en particular y la evalua en el random forest. Devuelve True si es Benigno y False si es maligno
+###predecir(self, fila)
+*Toma un conjunto de filas y se las aplica al random forest, devolviendo la predicciones generadas y la tasa de error de las mismas
+###crear_fila(self, filas, indice)
+*Toma un grupo de datos y los transforma en una fila parapoderlos evaluar posteriormente
+###print_forest(self)
+*Muestra todos los árboles del random forest
+
+##Arbol
+###crear_arbol(self, filas)
+*Inicia el proceso recursivo de creación con la raiz
+###crear_sub_arbol(self, nodo, filas, entropia, enlace)
+*Construye el árbol con base en n filas seleccionadas al azar, sigue el algoritmo describo en el libro, buscando siempre el atributo con mejor ganancia
+###generar_columnas(self, cantidad, atributos)
+*Genera una lista de tamano n, con números random entre 0 y atributos, esta lista representa las  columnas a evaluar
+###columna_unica(self, nodo, dist, nombre)
+*En caso de que solo quede una columna, se calcula el resultado  del grupo de datos pertinente
+###definir_eleccion(self, positivos, negativos, valor, nodo)
+*En caso de que solo quede una columna se extraer las posibles elecciones de la misma
+###get_prediccion(self, filas)
+*Retorna True si la predicción de un grupo de filas es 1 sino False
+###get_nombre_columnas(self, filas, columnas)
+*Obtiene el nombre de un conjunto de columnas
+###mejor_atributo(self, filas, entropia, columnas)
+*Obtiene cuál es el mejor atributo de un lista de posibles mejores atributos
+###get_entropia_raiz(self, filas)
+*Obtiene la entropía de un conjunto de filas
+###entropia(self, p, n)
+*Cálculo de la entropia según la fórmula del libro
+###ganancia_informacion(self, v_unicos, datos_columnas, col, entropia)
+*Retorna la diferencia entre la entropía del nodo padre y el residuo del atributo
+###contar_positivos(self, distribucion)
+*Cuenta cuantas filas (con un mismo valor de un atributo) tienen como resultado positivo
+###residuoself, v_unicos, datos, n_columna)
+*Para cada atributo obtiene su residuo, que está dado por  la suma de la entropia * (p/total + n/total) de cada valor diferente.
+###ver_arbol(self)
+*Imprime el arbol en formato que sea entendible al usuario
+###ver_arbol_aux(self, nivel, nodo_raiz
+*Función auxiliar de ver árbol
+###obtener_valor_fila(self, fila, atributo)
+*obtener_valor_fila Dada una fila, obtiene el valor de un atributo
+###evaluar_fila(self, fila)
+*Inicia el proceso recursivo de evaluación de una función
+###evaluar_fila_aux(self, nodo, fila)
+*Función donde se evalua a profundidad una fila en el árbol. Retorna True o False
+
+##Hoja
+###g_valor(self)
+*Retorna el valor de hoja
+###g_enlace(self)
+*Retorna el valor de enlace de la hoja
+
+##Nodo
+###hojas(self)
+*Retorna las hojas asociadas al nodo actual
+###nodos(self)
+*Retorna los nodos asociadas al nodo actual
+###g_etiqueta(self)
+*Retorna la etiqueta del nodo actual
+###g_enlace(self)
+*Retorna el enlace del nodo actual
+###g_nombre(self)
+*Retorna el nombre del atributo propietario del nodo
+###agregar_nodo(self, nodo)
+*Agrega un nodo a la lista de nodos hijos del actual nodo
+###agregar_hoja(self, datos)
+*Agregar una hoja a la lista de hojas del nodo actual
+###obtener_valor_hoja(self, valor)
+*Obtener el valor de una hoja en particular, dado el enlace de la misma
+###contiene_hoja(self, valor)
+*Verifica si un nodo posee una hoja, dado un enlace particular
+###contiene_nodo(self, valor)
+*Verifica si un nodo contiene un nodo, dado el nombre de un atributo
+###obtener_nodo_siguiente(self, valor)
+*Obtener un nodo de la lista de nodos del objeto actual, dado el nombre del atributo
+
+##Inicializador
+###obtener_parametros()
+*Se encarga de la lectura de parámetros que se le ingresen de la consola y dependiendo de la elección del usuario llama la función para ejecutar el Random Forest o la Red neuronal con sus respectivos parámetros
+###random_forest(arboles, umbral_poda, porcentaje_pruebas, prefijo)
+*Llama la función random forest con los parámetros ingresados.
+###red_neuronal(capas, unidades, funcion, porcentaje_pruebas, prefijo)
+*Llama la función red neuronal con los parámetros respectivos
+
+##main
+###main()
+*Llama a la función cross validation con los parámetros ingresados al inicializador.
+
 
 ------------------------------------------------
 # Análisis de resultados
 ------------------------------------------------
+
 
 ------------------------------------------------
 # Manual de Instalación
