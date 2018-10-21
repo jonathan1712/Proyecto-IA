@@ -13,8 +13,41 @@ Estudiantes:
 ------------------------------------------------
 
 ------------------------------------------------
-# Estrategía de Solución
+# Estrategia de Solución
 ------------------------------------------------
+Para la realización de este proyecto decidimos manejar n clases distintas para así resolver el problema.
+
+## Archivo
+Esta clase se encarga principalmente de manejar el set de datos, los diferentes métodos se encargan de obtenerlo del archivo descargado desde el repositorio.
+### get_data_set
+Retorna el atributo que corresponde al set de datos.
+### escribir_archivo_csv
+??
+### leer_data_set
+Con ayuda de la librería pandas se encarga de leer el archivo de extensión csv, así como de prepararlo para la ejecucución del modelo, esto eliminando la columna id, además de mover la columna diagnóstico al final.
+### abrir_archivo
+### escribir_linea
+### cerrar_archivo
+
+## Normalización
+
+## Cross Validation
+### definir_modelo
+Dado el tipo de modelo ingresado como parámetro se crea ya sea un modelo tipo Red Neuronal o Random Forest, con sus respectivos parámetros. Ya definido el modelo, se lee el data set desde el achivo .csv y se normalizan los datos.
+### cross_validation
+Este algoritmo se encarga de particionar el set de datos en dos conjuntos en cada iteración de un ciclo, primero entrena el modelo con el primer conjunto que serían los datos de entrenamiento, y luego, probar el modelo con el segundo conjunto que son los datos de prueba.
+### escribir_archivo_prediccion
+### particionar
+### particionar_forest
+### particionar_red
+### sacar_prediccion_red
+### sacar_prediccion_forest
+
+## Modelo
+
+## Red Neuronal
+
+## Random Forest
 
 ------------------------------------------------
 # Análisis de resultados
