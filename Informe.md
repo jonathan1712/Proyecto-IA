@@ -19,43 +19,73 @@ Repositorio: https://github.com/jonathan1712/Proyecto-IA.git
 Para la realización de este proyecto decidimos manejar n clases distintas para así resolver el problema.
 
 ## Archivo
-Esta clase se encarga principalmente de manejar el set de datos, los diferentes métodos se encargan de obtenerlo del archivo descargado desde el repositorio.
-### get_data_set
+Esta clase se encarga principalmente de manejar el set de datos, los diferentes métodos se encargan de obtenerlo del archivo descargado desde el repositorio disponible en kaggle.
+### get_data_set(self)
 Retorna el atributo que corresponde al set de datos.
-### escribir_archivo_csv
-??
-### leer_data_set
-Con ayuda de la librería pandas se encarga de leer el archivo de extensión csv, así como de prepararlo para la ejecucución del modelo, esto eliminando la columna id, además de mover la columna diagnóstico al final.
-### abrir_archivo
-### escribir_linea
-### cerrar_archivo
+### escribir_archivo_csv(self, datos, nombre_archivo)
+Esta función se encarga de escribir el archivo con el nombre que indica el parámetro nombre_archivo de extensión .csv los datos también dados como parámetro.
+### leer_data_set(self)
+Con ayuda de la librería pandas se encarga de leer el archivo de extensión .csv, así como de prepararlo para la ejecución del modelo, esto eliminando la columna id, además de mover la columna diagnóstico al final.
+### abrir_archivo(self)
+Se le asigna a la variable puntero un archivo de extensión .csv para escribir sobre él algunas estadísticas resultantes al ejecutar algún modelo.
+### escribir_linea(self, contenido)
+Se escribe sobre la variable puntero perteneciente a la clase, el contenido dado como parámetro.
+### cerrar_archivo(self)
+Se cierra la variable puntero, que correspondía a un archivo de extensión .csv.
 
 ## Normalización
 Esta clase es la encargada de la normalización de los datos, por lo cual, es indispensable, tanto para el modelo de redes neuronales como para el modelo de random forest. También se encarga de realizar la clasificación de las columnas, esto en el caso del random forest.
-### normalizar
-### zscore
-### clasificar_columna
-### clasificar_columnas
-### generar_rangos
-### evaluar_acote
-### evaluar_limite
-
+### normalizar(self)
+Para cada fila del data_set se aplica la función zscore. Cada valor de cada fila es redondeado a dos decimales antes de ser normalizado.
+### zcore(self, columna)
+Aplica la función zscore de stats a una columna (lista) recibida como parámetro.
+### clasificar_columnas(self)
+Toma las columnas ya normalizadas y las clasifica según la cantidad de rangos solicitados. Es importante saber que no clasifica la columna de diagnosis.
+### generar_rangos(self, media, minimo, maximo, rangos)
+Dado los valores flotantes de media, mínimo, máximo de una columna, genera un cantidad n de rangos, para ello se calcula la distancia del mínimo al máximo y ese es el intervalo de cada rango. Hace distinción entre límite del tipo "<x, >x" y a <= x < b
+### clasificar_columna(self, columna, etiquetas)
+Clasifica todos los elementos de una columna con base en las etiquetas que se generaron para la misma según el número de rangos solicitados.
+### evaluar_acote(self, expresion, num)
+Evalúa expresiones en string del tipo 10 - 11, donde implica que 10 <= x < 11, y en caso de ser correcto retorna True o False.
+### evaluar_limite(self, tipo, expresion, numero)
+Evalúa expresiones en string del tipo numero < x, x < numero, y retorna True o False dependiendo del resultado la evaluación.
 
 ## Cross Validation
-### definir_modelo
+### definir_modelo(self, argumentos)
 Dado el tipo de modelo ingresado como parámetro se crea ya sea un modelo tipo Red Neuronal o Random Forest, con sus respectivos parámetros. Ya definido el modelo, se lee el data set desde el achivo .csv y se normalizan los datos.
-### cross_validation
-Este algoritmo se encarga de particionar el set de datos en dos conjuntos en cada iteración de un ciclo, primero entrena el modelo con el primer conjunto que serían los datos de entrenamiento, y luego, probar el modelo con el segundo conjunto que son los datos de prueba.
-### escribir_archivo_prediccion
-### particionar
-### particionar_forest
-### particionar_red
-### sacar_prediccion_red
-### sacar_prediccion_forest
+### cross_validation(self)
+Es la función principal, en primer lugar se encarga de resguardar los datos de las predicciones, y posteriormente con los datos restantes aplica el proceso conocido como K-Fold cross validation. El objetivo de la función es determinar los porcentajes de error de las pruebas, de evaluación y primordialmente de las predicciones
+### escribir_archivo_prediccion(self, predicciones)
+Agrega una columna extra al dataframe de pandas donde se maneja el resultado de las predicciones, de forma que se puede comparar el valor real con el predicho
+### particionar(self, fold, k, n)
+Crea un dataframe para datos de entrenamiento y datos de pruebas, de manera que su manejo pueda ser llevado a cabo por el modelo.
+### sacar_prediccion(self):
+Dado un set de datos se obtiene una parte de este set que corresponde a un set de datos usado para predicciones en el modelo definido en la clase.
 
 ## Modelo
+### leer_archivo(self, nombre_archivo)
+Crea una instancia de un archivo con el nombre que recibe como parámetro, para posteriormente obtener los datos del archivo .csv.
+### normalizar(self, tipo_modelo)
+Una vez obtenido el valor de un archivo, se normalizan los datos, y si el tipo es random forest, también se aplica la clasificación.
 
 ## Red Neuronal
+### learner(self, datos_entrenamiento)
+Función de aprendizaje, dado un conjunto de datos de entrenamiento la red neuronal se llama a una función encargada de entrenar a la red neuronal con dicho conjunto.
+ ### crear_modelo(self)
+ Se configuran las características de la red, esto implica asignar la cantidad de capas y unidades por capa. Se hace un ciclo, donde cada iteración se crea una nueva capa.
+### entrenar_modelo(self, datos_entrenamiento)
+Una vez creado el modelo, se seleccionan los datos de entrenamiento y son ingresados en la red, de manera que, esta sea capaz, posteriormente de dar resultados óptimos. El primer paso antes de entrenar es compilar el modelo.
+### probar_modelo(self, datos_prueba)
+Se brindan los datos de prueba y se evalúan sobre el modelo (red neuronal) creado previamente. El retorno de la función es un porcentaje de error de la prueba.
+### predecir(self, datos_prediccion)
+Dado un conjunto de datos de predicción, estos se aplican al modelo (red neuronal)  y se obtiene su respuesta y la tasa de error de dicha predicción.
+### normalizar_datos_prediccion(self, prediccion)
+Recibe el arreglo de predicción y lo normaliza a binario.
+### crear_set_datos_entrenamiento(self)
+Se toma los datos de entrenamiento del modelo para generar un dataframe de pandas, el cual permite manipular los datos con mayor facilidad. Además de separarlos en dos sets de datos; lo que sería equivalente a las entradas y salidas.
+### crear_set_datos_prueba(self)
+Se toman los datos de prueba del modelo para generar un dataframe de pandas, el cual permite manipular los datos con mayor facilidad. Además de separarlos en dos sets de datos; lo que sería equivalente a las entradas y salidas.
+
 
 ## Random Forest
 
