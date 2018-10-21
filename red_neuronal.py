@@ -58,7 +58,7 @@ class Red_Neuronal (Modelo):
         El primer paso antes de entrenar es compilar el modelo.
         """
 
-        self.datos_entrenamiento = datos_entrenamiento
+        self.set_datos_entrenamiento = datos_entrenamiento
         self.crear_set_datos_entrenamiento()
         # Compilar el modelo
         self.modelo.compile(loss='binary_crossentropy',
@@ -75,11 +75,11 @@ class Red_Neuronal (Modelo):
         de la prueba
         """
 
-        self.datos_prueba = datos_prueba
+        self.set_datos_prueba = datos_prueba
         self.crear_set_datos_prueba()
         scores = self.modelo.evaluate(self.datos_prueba_x,
                                       self.codificado_datos_prueba_y)
-        return scores[1] * 100
+        return ((1- scores[1]) * 100)
 
     def predecir(self, datos_prediccion):
         """ predecir
@@ -93,19 +93,33 @@ class Red_Neuronal (Modelo):
         res = []
         pred = []
         self.datos_prediccion_x = datos_prediccion.iloc[:, 0:30].values
+        self.datos_prediccion_y = datos_prediccion.iloc[:, 30].values
         prediccion = self.modelo.predict(self.datos_prediccion_x, batch_size=None,
                                          verbose=1, steps=None)
-        print("-***********_")
-        print(prediccion)
-        """
+        # print("-***********_")
+        # print(prediccion)
+        
         pred = self.normalizar_datos_prediccion(prediccion)
         for i in range(len(pred)):
-            if not(pred[i] == datos_prediccion_y[i]):#prediccion ok?
+            if not(pred[i] == self.datos_prediccion_y[i]):#prediccion ok?
                 pred_error = pred_error + 1
         res.append(pred_error*100.0/len(pred))
         res.append(pred)
-        """
+
         return res
+
+    def normalizar_datos_prediccion(self, prediccion):
+        """
+        Recibe el arreglo de prediccion [[0.999],[0.321111]]
+        y lo normaliza a binario [[1][0]]
+        """
+        pred = []
+
+        for i in range(len(prediccion)):
+            prediccion[i] = np.round(prediccion[i]*10, decimals=-1)
+            prediccion[i] = prediccion[i]/10
+            pred.append(prediccion[i][1])
+        return pred
 
     def crear_set_datos_entrenamiento(self):
         """ crear_set_datos_entrenamiento
@@ -114,23 +128,6 @@ class Red_Neuronal (Modelo):
         mayor facilidad
         """
 
-        self.nombres_columnas = ["radius_mean", "texture_mean",
-                                 "perimeter_mean", "area_mean",
-                                 "smoothness_mean", "compactness_mean",
-                                 "concavity_mean", "concave points_mean",
-                                 "symmetry_mean", "fractal_dimension_mean",
-                                 "radius_se", "texture_se", "perimeter_se",
-                                 "area_se", "smoothness_se", "compactness_se",
-                                 "concavity_se", "concave points_se",
-                                 "symmetry_se", "fractal_dimension_se",
-                                 "radius_worst", "texture_worst",
-                                 "perimeter_worst", "area_worst",
-                                 "smoothness_worst", "compactness_worst",
-                                 "concavity_worst", "concave points_worst",
-                                 "symmetry_worst", "fractal_dimension_worst",
-                                 "diagnosis"]
-        self.set_datos_entrenamiento = pd.DataFrame(self.datos_entrenamiento,
-                                                    columns=self.nombres_columnas)
         self.datos_entrenamiento_x = self.set_datos_entrenamiento.iloc[:, 0:30].values
         self.datos_entrenamiento_y = self.set_datos_entrenamiento.iloc[:, 30].values
         # Codificando set de datos entrenamiento
@@ -143,8 +140,6 @@ class Red_Neuronal (Modelo):
         mayor facilidad
         """
 
-        self.set_datos_prueba = pd.DataFrame(
-            self.datos_prueba, columns=self.nombres_columnas)
         self.datos_prueba_x = self.set_datos_prueba.iloc[:, 0:30].values
         self.datos_prueba_y = self.set_datos_prueba.iloc[:, 30].values
         # Codificando set de datos entrenamiento

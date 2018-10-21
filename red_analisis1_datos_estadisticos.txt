@@ -1,0 +1,21 @@
+Modelo: Red_Neuronal
+K-Fold Validation de: 3
+** K-Fold: 0 **
+    Error de Validacion             -> 0.3759398496240629
+    Error de Testing                -> 3.7878787878787845
+    Fold error validacion actual    -> 0.3759398496240629
+    Fold error testing actual       -> 3.7878787878787845
+** K-Fold: 1 **
+    Error de Validacion             -> 0.0
+    Error de Testing                -> 3.7878787878787845
+    Fold error validacion actual    -> 0.3759398496240629
+    Fold error testing actual       -> 7.575757575757569
+** K-Fold: 2 **
+    Error de Validacion             -> 0.0
+    Error de Testing                -> 3.7878787878787845
+    Fold error validacion actual    -> 0.3759398496240629
+    Fold error testing actual       -> 11.363636363636353
+-------------------------------------------------------------
+-> Promedio error testing:    3.787878787878784
+-> Promedio error validacion: 0.12531328320802096
+-> Promedio error prediccion: 4.093567251461988

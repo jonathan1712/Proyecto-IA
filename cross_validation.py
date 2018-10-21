@@ -95,22 +95,8 @@ class Cross_Validation:
 
     def particionar(self, fold, k, n):
         """ particionar
-        Selecciona el tipo de particion para el k-fold cross validation
-        dependiendo del tipo de modelo que se desee entrenar
-        """
-
-        # si es una red neural
-        if(self.tipo_modelo == 1):
-            self.particionar_red(fold, k, n)
-        else:
-            if(self.tipo_modelo == 0):
-                self.particionar_forest(fold, k, n)
-
-    def particionar_forest(self, fold, k, n):
-        """ particionar_forest
         Crea un dataframe para datos de entrenamiento y datos de pruebas,
-        de manera que, su manejo pueda ser llevado a cabo por el random
-        forest
+        de manera que, su manejo pueda ser llevado a cabo por el modelo
         """
 
         self.datos_entrenamiento = pd.DataFrame(columns=self.datos_normalizados.columns)
@@ -123,52 +109,12 @@ class Cross_Validation:
             else:
                 self.datos_prueba.loc[i] = self.datos_normalizados.iloc[i]
 
-    def particionar_red(self, fold, k, n):
-        """ particionar_red
-        Crea un dataframe para datos de entrenamiento y datos de pruebas,
-        de manera que, su manejo pueda ser llevado a cabo por la red
-        neuronal
-        """
-
-        self.datos_entrenamiento = []
-        self.datos_prueba = []
-        extremo_derecho = ((fold+1) * n) - 1
-        extremo_izquierdo = extremo_derecho - n + 1
-        for i in range(len(self.datos_normalizados)):
-            if not (i >= extremo_izquierdo and i <= extremo_derecho):
-                self.datos_entrenamiento.append(np.array(self.datos_normalizados.iloc[i]))
-            else:
-                self.datos_prueba.append(np.array(self.datos_normalizados.iloc[i]))
-
     def sacar_prediccion(self):
         """ sacar_prediccion
-        Selecciona el tipo de método de sacar prediccion de acuerdo
-        con el tipo de modelo que se este utilizando
-        """
-
-        if(self.tipo_modelo == 1):
-            self.sacar_prediccion_red()
-        else:
-            self.sacar_prediccion_forest()
-
-    def sacar_prediccion_red(self):
-        """ sacar_prediccion_red
-        Dado un modelo de red neuronal se obtienen las predecciones
+        Dado un modelo se obtienen las predecciones
         de la misma, y se normalizan los resultados
         """
 
-        self.datos_prediccion = []
-        n = (round(len(self.datos_normalizados) * self.porcentaje_pruebas))
-        for i in range(n):
-            numero = random.randint(0, len(self.datos_normalizados) - 1)
-            self.datos_prediccion.append(np.array(self.datos_normalizados.iloc[numero]))
-            self.datos_normalizados = self.datos_normalizados.drop(self.datos_normalizados.index[[numero]])
-
-    def sacar_prediccion_forest(self):
-        """ sacar_prediccion_forest
-        Dado un modelo de random_ forest se obtienen las predecciones
-        de la misma, y se normalizan los resultados
-        """
         self.datos_prediccion = pd.DataFrame(columns=self.datos_normalizados.columns)
         n = (round(len(self.datos_normalizados) * self.porcentaje_pruebas))
         for i in range(n):
