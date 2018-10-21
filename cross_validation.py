@@ -6,32 +6,48 @@ import pandas as pd
 class Cross_Validation:
 
     def __init__(self, tipo_modelo, porcentaje_pruebas, prefijo, argumentos):
-        self.k = 3 #dejarlo fijo
+        # dejarlo fijo
+        self.k = 3
         self.tipo_modelo = tipo_modelo
-        self.nombre_archivo = "data_set.csv" #Dejarlo fijo también
+        # dejarlo fijo también
+        self.nombre_archivo = "data_set.csv"
         self.porcentaje_pruebas = porcentaje_pruebas
         self.prefijo = prefijo
         self.definir_modelo(argumentos)
 
-    def definir_modelo(self,  argumentos):
+    def definir_modelo(self, argumentos):
+        """ definir_modelo
+        Según los parámetros enviados al programa se selecciona
+        el tipo de modelo que corresponde. Esto es posible gracias
+        a la herencia implementada
+        """
+
         # Red Neuronal es tipo 1
         if (self.tipo_modelo == 1):
             numero_capas = argumentos[0]
             numero_unidades = argumentos[1]
             funcion_activacion = argumentos[2]
-            self.modelo = Red_Neuronal(numero_capas, 
-                            numero_unidades, funcion_activacion)
+            self.modelo = Red_Neuronal(numero_capas,
+                                       numero_unidades,
+                                       funcion_activacion)
         else:
             num_arboles = argumentos[0]
             poda = argumentos[1]    # no utilizable por el momento
             self.modelo = Random_Forest(num_arboles)
-            
+
         self.modelo.leer_archivo(self.nombre_archivo)
-        self.modelo.normalizar(self.tipo_modelo)            
+        self.modelo.normalizar(self.tipo_modelo)
         self.datos_normalizados = self.modelo.datos_normalizados
-        
+
     def cross_validation(self):
-        
+        """ cross_validation
+        Es la función principal, en primer lugar se encarga de resguardar
+        los datos de las predicciones, y posteriormente con los datos
+        restantes aplica el proceso conocido como K-Fold cross validation
+        El objetivo de la función es determinar los porcentajes de error
+        de las pruebas, de evaluación y primordialmente de las predicciones
+        """
+
         self.sacar_prediccion()
         fold_errT = 0
         fold_errV = 0
@@ -42,7 +58,7 @@ class Cross_Validation:
         archivo.escribir_linea("K-Fold Validation de: " + str(self.k) + "\n")
 
         for fold in range(self.k):
-            archivo.escribir_linea("** K-Fold: " + str(fold)  + " **" + "\n")
+            archivo.escribir_linea("** K-Fold: " + str(fold) + " **" + "\n")
             self.particionar(fold, self.k, n)
             self.modelo.learner(self.datos_entrenamiento)
             errV = self.modelo.probar_modelo(self.datos_entrenamiento)
@@ -66,21 +82,37 @@ class Cross_Validation:
         self.escribir_archivo_prediccion(resultados_predicciones[1])
 
     def escribir_archivo_prediccion(self, predicciones):
-        self.datos_prediccion = self.datos_prediccion.drop('index',axis=1)
-        self.datos_prediccion['Prediccion'] = predicciones
-        
-        archivo = Archivo(self.prefijo + "_prediccion.csv")
-        archivo.escribir_archivo_csv(self.datos_prediccion, archivo.nombre_archivo)    
+        """ escribir_archivo_prediccion
+        Agrega una columna extra al dataframe de pandas donde se maneja el
+        resultado de las predicciones, de forma que se puede comparar el
+        valor real con el predicho
+        """
 
+        self.datos_prediccion = self.datos_prediccion.drop('index', axis=1)
+        self.datos_prediccion['Prediccion'] = predicciones
+        archivo = Archivo(self.prefijo + "_prediccion.csv")
+        archivo.escribir_archivo_csv(self.datos_prediccion, archivo.nombre_archivo)
 
     def particionar(self, fold, k, n):
+        """ particionar
+        Selecciona el tipo de particion para el k-fold cross validation
+        dependiendo del tipo de modelo que se desee entrenar
+        """
+
+        # si es una red neural
         if(self.tipo_modelo == 1):
-            self.particionar_red(fold, k,n)
+            self.particionar_red(fold, k, n)
         else:
             if(self.tipo_modelo == 0):
                 self.particionar_forest(fold, k, n)
 
     def particionar_forest(self, fold, k, n):
+        """ particionar_forest
+        Crea un dataframe para datos de entrenamiento y datos de pruebas,
+        de manera que, su manejo pueda ser llevado a cabo por el random
+        forest
+        """
+
         self.datos_entrenamiento = pd.DataFrame(columns=self.datos_normalizados.columns)
         self.datos_prueba = pd.DataFrame(columns=self.datos_normalizados.columns)
         extremo_derecho = ((fold+1) * n) - 1
@@ -92,6 +124,12 @@ class Cross_Validation:
                 self.datos_prueba.loc[i] = self.datos_normalizados.iloc[i]
 
     def particionar_red(self, fold, k, n):
+        """ particionar_red
+        Crea un dataframe para datos de entrenamiento y datos de pruebas,
+        de manera que, su manejo pueda ser llevado a cabo por la red
+        neuronal
+        """
+
         self.datos_entrenamiento = []
         self.datos_prueba = []
         extremo_derecho = ((fold+1) * n) - 1
@@ -101,25 +139,39 @@ class Cross_Validation:
                 self.datos_entrenamiento.append(np.array(self.datos_normalizados.iloc[i]))
             else:
                 self.datos_prueba.append(np.array(self.datos_normalizados.iloc[i]))
-    
+
     def sacar_prediccion(self):
-        if(self.tipo_modelo==1):
+        """ sacar_prediccion
+        Selecciona el tipo de método de sacar prediccion de acuerdo
+        con el tipo de modelo que se este utilizando
+        """
+
+        if(self.tipo_modelo == 1):
             self.sacar_prediccion_red()
         else:
             self.sacar_prediccion_forest()
 
     def sacar_prediccion_red(self):
+        """ sacar_prediccion_red
+        Dado un modelo de red neuronal se obtienen las predecciones
+        de la misma, y se normalizan los resultados
+        """
+
         self.datos_prediccion = []
         n = (round(len(self.datos_normalizados) * self.porcentaje_pruebas))
-        for i in range (n):
+        for i in range(n):
             numero = random.randint(0, len(self.datos_normalizados) - 1)
             self.datos_prediccion.append(np.array(self.datos_normalizados.iloc[numero]))
             self.datos_normalizados = self.datos_normalizados.drop(self.datos_normalizados.index[[numero]])
 
     def sacar_prediccion_forest(self):
+        """ sacar_prediccion_forest
+        Dado un modelo de random_ forest se obtienen las predecciones
+        de la misma, y se normalizan los resultados
+        """
         self.datos_prediccion = pd.DataFrame(columns=self.datos_normalizados.columns)
         n = (round(len(self.datos_normalizados) * self.porcentaje_pruebas))
-        for i in range (n):
+        for i in range(n):
             numero = random.randint(0, len(self.datos_normalizados) - 1)
             self.datos_prediccion.loc[i] = self.datos_normalizados.iloc[numero]
             self.datos_normalizados = self.datos_normalizados.drop(self.datos_normalizados.index[[numero]])

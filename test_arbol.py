@@ -2,12 +2,6 @@ from arbol import *
 import pandas as pd
 
 
-def test_crear_arbol():
-    assert(1 == 1)
-
-def test_crear_sub_arbol():
-    assert(1 == 1)
-
 def test_generar_columnas():
     arbol = Arbol()
     cantidad = 3
@@ -276,10 +270,3 @@ def test_obtener_valor_fila():
     assert(arbol.obtener_valor_fila(df, 'radio') == 2)
     assert(arbol.obtener_valor_fila(df, 'marital') == 0)
     assert(arbol.obtener_valor_fila(df, 'diagnosis') == 3)
-
-
-def test_evaluar_fila():
-    assert(1 == 1)
-
-def test_evaluar_fila_aux():
-    assert(1 == 1)

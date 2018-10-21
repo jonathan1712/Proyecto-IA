@@ -69,21 +69,3 @@ def test_clasificar_columna():
     # caso donde se el valor esperado es incorrecto
     assert(normalizador.clasificar_columna(col_a, etiq_a) != error_p_a)
     assert(normalizador.clasificar_columna(col_b, etiq_b) != error_p_b)
-
-
-def test_clasificar_columnas():
-    are = [0.4, 4, 1.6, -2.3, 2.3, 2.1, 1, 0.7, 0.2, 2.1, 0.5, 1.4, 1.4, -2.1]
-    rad = [0.1, 0.4, 0.5, 1, 2.9, 2.2, 2.4, 1.5, 2.5, 1.5, 1, 1, 0.1, 1.1]
-    tex = [0.4, 0.1, 0.9, 0.8, 1.3, 1.3, 1.8, 0.1, 1.5, 1.1, 1, 0.2, 1, 0.1]
-    per = [0.1, 1, 0.2, 0.2, 0.6, 1.2, 1.8, 0.1, 0.9, 0.1, 1, 1, 0.8, 1]
-    dia = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
-    data_set = pd.DataFrame({'area_mean': are,
-                             'radius_mean': rad,
-                             'texture_mean': tex,
-                             'perimeter_mean': per,
-                             'diagnosis': dia})
-
-    normalizador = Normalizador(data_set, [2, 2, 2, 2, 2])
-    normalizador.normalizar()
-    # normalizador.clasificar_columnas()
-    assert(1 == 1)

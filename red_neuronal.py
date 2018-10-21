@@ -7,7 +7,7 @@ from modelo import *
 
 
 class Red_Neuronal (Modelo):
-    
+
     def __init__(self, numero_capas, unidades_capa, funcion_activacion):
         self.numero_capas = numero_capas
         self.unidades_capa = unidades_capa
@@ -21,10 +21,10 @@ class Red_Neuronal (Modelo):
 
         self.crear_modelo()
         self.entrenar_modelo(datos_entrenamiento)
-        
+
     def probar(self, modelo, datos_prueba):
         """ probar
-        Dado un conjunto de datos de prueba se procede a a 
+        Dado un conjunto de datos de prueba se procede a
         evaluación de los mismos
         """
 
@@ -32,66 +32,88 @@ class Red_Neuronal (Modelo):
 
     def crear_modelo(self):
         """ crear_modelo
-
+        Se configuran las características de la red, esto implica
+        asignar la cantidad de capas y unidades por capa
+        Se hace un ciclo, donde cada iteración se crea una nueva
+        capa
         """
+
         self.modelo = Sequential()
-        self.capas = self.numero_capas-2
-        self.modelo.add(Dense(units = self.unidades_capa,
-                              input_shape=(30,), 
+        self.capas = self.numero_capas - 2
+        self.modelo.add(Dense(units=self.unidades_capa,
+                              input_shape=(30, ),
                               activation=self.funcion_activacion))
-        
-        while(self.capas>0):
-            self.modelo.add(Dense(units = self.unidades_capa,
+        while(self.capas > 0):
+            self.modelo.add(Dense(units=self.unidades_capa,
                                   activation=self.funcion_activacion))
             self.capas = self.capas - 1
-
-        self.modelo.add(Dense(units = 2,
-                            activation=self.funcion_activacion))
+        self.modelo.add(Dense(units=2,
+                              activation=self.funcion_activacion))
 
     def entrenar_modelo(self, datos_entrenamiento):
+        """ entrenar_modelo
+        Una vez creado el modelo, se seleccionan los datos de
+        entrenamiento y son ingresados en la red, de manera que,
+        esta sea capaz, posteriormente de dar resultados óptimos.
+        El primer paso antes de entrenar es compilar el modelo.
+        """
+
         self.datos_entrenamiento = datos_entrenamiento
         self.crear_set_datos_entrenamiento()
         # Compilar el modelo
         self.modelo.compile(loss='binary_crossentropy',
                             optimizer='rmsprop', metrics=['accuracy'])
-
         # Entrenar el modelo
         self.modelo.fit(self.datos_entrenamiento_x,
                         self.codificado_datos_entrenamiento_y,
                         epochs=300, batch_size=10)
 
     def probar_modelo(self, datos_prueba):
+        """ probar_modelo
+        Se brindan los datos de prueba y se evaluan sobre el modo creado
+        previamente. El retorno de la función es un porcentaje de error
+        de la prueba
+        """
+
         self.datos_prueba = datos_prueba
         self.crear_set_datos_prueba()
         scores = self.modelo.evaluate(self.datos_prueba_x,
-                                     self.codificado_datos_prueba_y)
+                                      self.codificado_datos_prueba_y)
         return scores[1] * 100
 
     def predecir(self, datos_prediccion):
+        """ predecir
+        Dado un conjunto de datos de predicción, estos se aplican al
+        modelo y se obtiene su respuesta y la tasa de error de
+        predicción
+        """
+
         print(datos_prediccion)
         pred_error = 0
         res = []
         pred = []
- 
         self.datos_prediccion_x = datos_prediccion.iloc[:, 0:30].values
-        prediccion = self.modelo.predict(self.datos_prediccion_x, batch_size=None, 
-                                        verbose=1, steps=None)
+        prediccion = self.modelo.predict(self.datos_prediccion_x, batch_size=None,
+                                         verbose=1, steps=None)
         print("-***********_")
         print(prediccion)
         """
         pred = self.normalizar_datos_prediccion(prediccion)
-     
         for i in range(len(pred)):
             if not(pred[i] == datos_prediccion_y[i]):#prediccion ok?
                 pred_error = pred_error + 1
         res.append(pred_error*100.0/len(pred))
         res.append(pred)
-
         """
         return res
 
-
     def crear_set_datos_entrenamiento(self):
+        """ crear_set_datos_entrenamiento
+        Se toma los datos de entrenamiento del modelo para generar un
+        dataframe de pandas, el cual permite manipular los datos con
+        mayor facilidad
+        """
+
         self.nombres_columnas = ["radius_mean", "texture_mean",
                                  "perimeter_mean", "area_mean",
                                  "smoothness_mean", "compactness_mean",
@@ -107,21 +129,23 @@ class Red_Neuronal (Modelo):
                                  "concavity_worst", "concave points_worst",
                                  "symmetry_worst", "fractal_dimension_worst",
                                  "diagnosis"]
-        self.set_datos_entrenamiento = pd.DataFrame(
-            self.datos_entrenamiento, columns=self.nombres_columnas)
-        
+        self.set_datos_entrenamiento = pd.DataFrame(self.datos_entrenamiento,
+                                                    columns=self.nombres_columnas)
         self.datos_entrenamiento_x = self.set_datos_entrenamiento.iloc[:, 0:30].values
         self.datos_entrenamiento_y = self.set_datos_entrenamiento.iloc[:, 30].values
-        
         # Codificando set de datos entrenamiento
         self.codificado_datos_entrenamiento_y = np_utils.to_categorical(self.datos_entrenamiento_y)
 
     def crear_set_datos_prueba(self):
+        """ crear_set_datos_prueba
+        Se toman los datos de prueba del modelo para generar un
+        dataframe de pandas, el cual permite manipular los datos con
+        mayor facilidad
+        """
+
         self.set_datos_prueba = pd.DataFrame(
             self.datos_prueba, columns=self.nombres_columnas)
-        
         self.datos_prueba_x = self.set_datos_prueba.iloc[:, 0:30].values
         self.datos_prueba_y = self.set_datos_prueba.iloc[:, 30].values
-
         # Codificando set de datos entrenamiento
         self.codificado_datos_prueba_y = np_utils.to_categorical(self.datos_prueba_y)
